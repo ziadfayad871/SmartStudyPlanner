@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="SmartStudyPlanner.Application/SmartStudyPlanner.Application.csproj" />
+  <Project Path="SmartStudyPlanner.Domain/SmartStudyPlanner.Domain.csproj" />
+  <Project Path="SmartStudyPlanner.Infrastructure/SmartStudyPlanner.Infrastructure.csproj" />
+  <Project Path="SmartStudyPlanner.Web/SmartStudyPlanner.Web.csproj" />
+</Solution>
