@@ -8,8 +8,10 @@
 
   <ItemGroup>
     <Folder Include="DTOs\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartStudyPlanner.Domain\SmartStudyPlanner.Domain.csproj" />
   </ItemGroup>
 
 </Project>

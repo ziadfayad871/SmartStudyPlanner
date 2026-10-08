@@ -24,8 +24,8 @@ namespace SmartStudyPlanner.Domain.Entities
         public int UserId { get; set; }
         public User User { get; set; } = null!;
         public DateTime Date { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
         public TimeSpan Duration { get; set; }
         public SessionStatus Status { get; set; }
     }

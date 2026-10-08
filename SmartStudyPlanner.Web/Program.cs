@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using SmartStudyPlanner.Application.Interfaces;
+using SmartStudyPlanner.Application.Services;
 using SmartStudyPlanner.Infrastructure.Data;
+using SmartStudyPlanner.Infrastructure.Repositories;
 
 namespace SmartStudyPlanner.Web
 {
@@ -12,10 +15,15 @@ namespace SmartStudyPlanner.Web
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-           
-            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+            builder.Services.AddDbContext<ApplicationDbContext>(
+     options => options.UseSqlServer(connectionString));
+
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+            builder.Services.AddScoped<ISubjectService, SubjectService>();
+
             var app = builder.Build();
-            
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

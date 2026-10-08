@@ -15,6 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SmartStudyPlanner.Application\SmartStudyPlanner.Application.csproj" />
+    <ProjectReference Include="..\SmartStudyPlanner.Domain\SmartStudyPlanner.Domain.csproj" />
     <ProjectReference Include="..\SmartStudyPlanner.Infrastructure\SmartStudyPlanner.Infrastructure.csproj" />
   </ItemGroup>
 
