@@ -1,170 +1,175 @@
-﻿using SmartStudyPlanner.Application.Interfaces;
+﻿
+using SmartStudyPlanner.Application.DTOs;
+using SmartStudyPlanner.Application.Interfaces;
 using SmartStudyPlanner.Domain.Entities;
+using SmartStudyPlanner.Domain.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using SmartStudyPlanner.Application.DTOs;
-using SmartStudyPlanner.Domain.Enums;
+using System.Linq;
 using System.Threading.Tasks;
-using Task = System.Threading.Tasks.Task;
 
 namespace SmartStudyPlanner.Application.Services
 {
     public class SubjectService : ISubjectService
-
     {
         private readonly ISubjectRepository _subjectRepository;
+
         public SubjectService(ISubjectRepository subjectRepository)
         {
             _subjectRepository = subjectRepository;
         }
-        public void AddSubject(Subject subject)
+
+        // Convert Entity to DTO
+        private static SubjectDto MapToDto(Subject subject)
         {
-            // Validate the subject (you can add more validation as needed)
-            if (string.IsNullOrWhiteSpace(subject.Name))
+            return new SubjectDto
             {
-                throw new ArgumentException("Subject name cannot be empty.");
-            }
-            // Add the subject to the repository
-            _subjectRepository.Add(subject);
-            _subjectRepository.SaveChanges();
+                Id = subject.Id,
+                Name = subject.Name,
+                Description = subject.Description,
+                Difficulty = subject.Difficulty,
+                Progress = subject.Progress,
+                ExamDate = subject.ExamDate,
+                UserId = subject.UserId
+            };
         }
 
-        public void DeleteSubject(int subjectId)
+        // Get all subjects
+        public async Task<IEnumerable<SubjectDto>> GetAllSubjects()
         {
+            var subjects = await _subjectRepository.GetAllAsync();
 
-            // Retrieve the subject by ID
-            var subject = _subjectRepository.GetById(subjectId);
-            // Check if the subject exists
-            if (subject != null)
-            {
-                // Delete the subject
-                _subjectRepository.Delete(subject);
-                _subjectRepository.SaveChanges();
-            }
-            else
-            {
-                throw new ArgumentException($"Subject with ID {subjectId} not found.");
-            }
+            return subjects.Select(MapToDto).ToList();
         }
 
-        public async Task<IEnumerable<Subject>> GetAllSubjects()
+        // Get one subject by ID
+        public async Task<SubjectDto?> GetSubjectByIdAsync(int subjectId)
         {
-            // Retrieve all subjects from the repository
-            // get all async and return the result
-            return await _subjectRepository.GetAllAsync();
+            var subject = await _subjectRepository.GetByIdAsync(subjectId);
 
+            if (subject == null)
+                return null;
+
+            return MapToDto(subject);
         }
 
-        public Subject? GetSubjectById(int subjectId)
-        {
-            // Retrieve the subject by ID
-            return _subjectRepository.GetById(subjectId);
-        }
-
-        public IEnumerable<Subject> GetSubjectsByUserId(int userId)
+        // Get subjects belonging to a user
+        public IEnumerable<SubjectDto> GetSubjectsByUserId(int userId)
         {
             if (userId <= 0)
-            {
-                throw new ArgumentException("User ID Must be a positive integer.");
+                throw new ArgumentException("User ID must be positive.");
 
-            }
-            return _subjectRepository.GetByUserId(userId);
+            var subjects = _subjectRepository.GetByUserId(userId);
 
-
+            return subjects.Select(MapToDto).ToList();
         }
 
-        public void UpdateSubject(Subject subject)
+        // Add a new subject
+        public async System.Threading.Tasks.Task AddSubjectAsync(SubjectDto subjectDto)
         {
-            if (subject == null)
-            {
-                throw new ArgumentException("Subject cannot be null.");
-            }
-            // Validate the subject (you can add more validation as needed)
-            if (string.IsNullOrWhiteSpace(subject.Name))
-            {
+            if (subjectDto == null)
+                throw new ArgumentNullException(nameof(subjectDto));
+
+            if (string.IsNullOrWhiteSpace(subjectDto.Name))
                 throw new ArgumentException("Subject name cannot be empty.");
-            }
-            // Update the subject in the repository
+
+            var subject = new Subject
+            {
+                Name = subjectDto.Name,
+                Description = subjectDto.Description,
+                Difficulty = subjectDto.Difficulty,
+                Progress = subjectDto.Progress,
+                ExamDate = subjectDto.ExamDate,
+                UserId = subjectDto.UserId,
+            };
+
+            await _subjectRepository.AddAsync(subject);
+            await _subjectRepository.SaveChangesAsync();
+            //try
+            //{
+            //    await _subjectRepository.AddAsync(subject);
+            //    await _subjectRepository.SaveChangesAsync();
+            //}
+            //catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            //{
+            //    var error = ex.InnerException?.Message ?? ex.Message;
+            //    throw new Exception(error, ex);
+            //}
+        }
+        
+        // Update an existing subject
+        public void UpdateSubject(SubjectDto subjectDto)
+        {
+            if (subjectDto == null)
+                throw new ArgumentNullException(nameof(subjectDto));
+
+            if (string.IsNullOrWhiteSpace(subjectDto.Name))
+                throw new ArgumentException("Subject name cannot be empty.");
+
+            var subject = _subjectRepository.GetById(subjectDto.Id);
+
+            if (subject == null)
+                throw new ArgumentException(
+                    $"Subject with ID {subjectDto.Id} not found.");
+
+            subject.Name = subjectDto.Name;
+            subject.Description = subjectDto.Description;
+            subject.Difficulty = subjectDto.Difficulty;
+            subject.Progress = subjectDto.Progress;
+            subject.ExamDate = subjectDto.ExamDate;
+            subject.UserId = subjectDto.UserId;
+
             _subjectRepository.Update(subject);
             _subjectRepository.SaveChanges();
         }
-        public SubjectDto? GetSubjectDtoById(int subjectId)
+
+        // Delete a subject
+        public void DeleteSubject(int subjectId)
         {
             var subject = _subjectRepository.GetById(subjectId);
-            if (subject == null)
-            {
-                return null;
-            }
-            // Map the Subject entity to SubjectDto
-            var subjectDto = new SubjectDto
-            {
-                Id = subject.Id,
-                Name = subject.Name,
-                Description = subject.Description,
-                Difficulty = subject.Difficulty,
-                Progress = subject.Progress,
-                ExamDate = subject.ExamDate
-            };
-            return subjectDto;
-        }
-        public IEnumerable<Subject> GetHardSubjects()
-        {
-            var AllSubjects = _subjectRepository.GetAll();
-            // Filter subjects with difficulty level "Hard"
-            var hardSubjects = AllSubjects.Where(s => s.Difficulty == Difficulty.Hard);
 
-            // You can perform additional operations with the hard subjects if needed
-            return hardSubjects;
-        }
-        public SubjectDto? GetSubjectDtoByName(string subjectName)
-        {
-            var subject = _subjectRepository.GetAll().FirstOrDefault(s => s.Name == subjectName);
             if (subject == null)
-            {
-                return null;
-            }
-            // Map the Subject entity to SubjectDto
-            var subjectDto = new SubjectDto
-            {
-                Id = subject.Id,
-                Name = subject.Name,
-                Description = subject.Description,
-                Difficulty = subject.Difficulty,
-                Progress = subject.Progress,
-                ExamDate = subject.ExamDate
-            };
-            return subjectDto;
+                throw new ArgumentException(
+                    $"Subject with ID {subjectId} not found.");
+
+            _subjectRepository.Delete(subject);
+            _subjectRepository.SaveChanges();
         }
-        public Subject? GetFirstHardSubject()
+
+        // Get subjects with Hard difficulty
+        public IEnumerable<SubjectDto> GetHardSubjects()
         {
-            var hardSubject = _subjectRepository.GetAll().FirstOrDefault(s => s.Difficulty == Difficulty.Hard);
-            return hardSubject;
+            var subjects = _subjectRepository.GetAll()
+                .Where(s => s.Difficulty == Difficulty.Hard);
+
+            return subjects.Select(MapToDto).ToList();
         }
+
+        // Get the first Hard subject
+        public SubjectDto? GetFirstHardSubject()
+        {
+            var subject = _subjectRepository.GetAll()
+                .FirstOrDefault(s => s.Difficulty == Difficulty.Hard);
+
+            return subject == null ? null : MapToDto(subject);
+        }
+
+        // Check whether any Hard subjects exist
         public bool HasHardSubjects()
         {
-            var hardSubjects = _subjectRepository.GetAll().Any(s => s.Difficulty == Difficulty.Hard);
-            return hardSubjects;
+            return _subjectRepository.GetAll()
+                .Any(s => s.Difficulty == Difficulty.Hard);
         }
 
-        public async Task AddSubjectAsync(Subject subject)
+        // Find a subject by name
+        public SubjectDto? GetSubjectDtoByName(string subjectName)
         {
-            if (subject == null)
-            {
-                throw new ArgumentException("Subject cannot be null.");
-            }
-            await _subjectRepository.AddAsync(subject);
-            await _subjectRepository.SaveChangesAsync();
+            var subject = _subjectRepository.GetAll()
+                .FirstOrDefault(s => s.Name == subjectName);
+
+            return subject == null ? null : MapToDto(subject);
         }
 
-        public async Task<Subject?> GetSubjectByIdAsync(int subjectId)
-        {
-            var subject = await _subjectRepository.GetByIdAsync(subjectId);
-            if (subject == null)
-            {
-                return null;
-            }
-            return subject;
-        }
+        
     }
 }

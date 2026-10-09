@@ -1,4 +1,5 @@
-﻿using SmartStudyPlanner.Domain.Enums;
+﻿using SmartStudyPlanner.Domain.Entities;
+using SmartStudyPlanner.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +14,9 @@ namespace SmartStudyPlanner.Application.DTOs
         public Difficulty Difficulty { get; set; }
         public int Progress { get; set; }
         public DateTime?  ExamDate { get; set; }
+        // add UserId property to SubjectDto
+        public int UserId { get; set; }
+
+
     }
 }

@@ -1,0 +1,88 @@
+﻿```cshtml
+@using SmartStudyPlanner.Application.DTOs
+@using SmartStudyPlanner.Domain.Entities
+@model SubjectDto
+
+@{
+    ViewData["Title"] = "Add Subject";
+}
+
+<h2>Add New Subject</h2>
+@if (ViewBag.Errors != null)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var error in ViewBag.Errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}
+
+<form asp-controller="Subjects" asp-action="Create" method="post">
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Subject Name</label>
+        <input asp-for="Name" class="form-control" placeholder="Enter subject name" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="UserId" class="form-label">User</label>
+
+        <select asp-for="UserId" class="form-select">
+            <option value="">Select User</option>
+
+            @foreach (var user in ViewBag.Users as List<User>
+                ?? new List<User>())
+            {
+                <option value="@user.Id">@user.Name</option>
+            }
+        </select>
+
+        <span asp-validation-for="UserId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Description</label>
+        <textarea asp-for="Description" class="form-control" rows="3"
+                  placeholder="Enter subject description"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Difficulty" class="form-label">Difficulty</label>
+        <select asp-for="Difficulty"
+                class="form-select"
+                asp-items="Html.GetEnumSelectList<SmartStudyPlanner.Domain.Enums.Difficulty>()">
+        </select>
+        <span asp-validation-for="Difficulty" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Progress" class="form-label">Progress (%)</label>
+        <input asp-for="Progress" type="number" min="0" max="100"
+               class="form-control" />
+        <span asp-validation-for="Progress" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ExamDate" class="form-label">Exam Date</label>
+        <input asp-for="ExamDate" type="date" class="form-control" />
+        <span asp-validation-for="ExamDate" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Subject</button>
+
+    <a asp-controller="Subjects"
+       asp-action="Index"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+```

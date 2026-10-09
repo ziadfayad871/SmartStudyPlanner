@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using Task = System.Threading.Tasks.Task;
 
 namespace SmartStudyPlanner.Application.Interfaces
 {

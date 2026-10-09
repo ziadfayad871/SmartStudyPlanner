@@ -1,7 +1,16 @@
-﻿@using SmartStudyPlanner.Domain.Entities
-@model IEnumerable<Subject>
+﻿```cshtml
+@using SmartStudyPlanner.Application.DTOs
+@model IEnumerable<SubjectDto>
 
 <h2>Subjects</h2>
+
+<a asp-controller="Subjects"
+   asp-action="Create"
+   class="btn btn-primary">
+    + Add Subject
+</a>
+
+<hr />
 
 @if (Model != null && Model.Any())
 {
@@ -15,13 +24,31 @@
 
             <a asp-controller="Subjects"
                asp-action="Details"
-               asp-route-id="@subject.Id">
+               asp-route-id="@subject.Id"
+               class="btn btn-info">
                 Details
             </a>
+
+            <a asp-controller="Subjects"
+               asp-action="Edit"
+               asp-route-id="@subject.Id"
+               class="btn btn-warning">
+                Edit
+            </a>
+
+            <a asp-controller="Subjects"
+               asp-action="Delete"
+               asp-route-id="@subject.Id"
+               class="btn btn-danger">
+                Delete
+            </a>
         </div>
+
+        <hr />
     }
 }
 else
 {
     <p>No subjects found.</p>
 }
+```

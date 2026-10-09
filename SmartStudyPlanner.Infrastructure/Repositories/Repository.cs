@@ -51,7 +51,17 @@ namespace SmartStudyPlanner.Infrastructure.Repositories
 
         public void SaveChanges()
         {
-            _context.SaveChanges();
+            try
+            {
+                
+                _context.SaveChanges();
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                var error = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception(error, ex);
+            }
+            
         }
 
         public void Update(T entity)
