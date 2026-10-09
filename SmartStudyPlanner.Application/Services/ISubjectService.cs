@@ -1,19 +1,26 @@
-﻿using SmartStudyPlanner.Application.Interfaces;
+﻿using SmartStudyPlanner.Application.DTOs;
+using SmartStudyPlanner.Application.Interfaces;
 using SmartStudyPlanner.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using Task = System.Threading.Tasks.Task;
 namespace SmartStudyPlanner.Application.Services
 {
     public interface ISubjectService 
     {
-        IEnumerable<Subject>  GetAllSubjects();
+        Task<IEnumerable<Subject>>  GetAllSubjects();
         Subject ? GetSubjectById(int subjectId);
         IEnumerable<Subject> GetSubjectsByUserId(int userId);
-        void AddSubject(Subject subject);
-        void UpdateSubject(Subject subject);
-        void DeleteSubject(int subjectId);
+        Task AddSubjectAsync(Subject subject);
+       Task<Subject?> GetSubjectByIdAsync(int subjectId);
+        SubjectDto? GetSubjectDtoById(int subjectId);
+        IEnumerable<Subject> GetHardSubjects();
+        SubjectDto? GetSubjectDtoByName(string subjectName);
+        Subject? GetFirstHardSubject();
+        bool HasHardSubjects();
 
     }
 }

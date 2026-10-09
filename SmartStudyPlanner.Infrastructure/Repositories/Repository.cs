@@ -3,6 +3,7 @@ using SmartStudyPlanner.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmartStudyPlanner.Infrastructure.Repositories
 {
@@ -32,6 +33,17 @@ namespace SmartStudyPlanner.Infrastructure.Repositories
 
         }
 
+
+        public async Task<IEnumerable<T>> GetAllAsync()
+        {
+            return await _context.Set<T>().ToListAsync();
+        }
+
+        public async Task<T?> GetByIdAsync(int id)
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
+
         public T? GetById(int id)
         {
             return _context.Set<T>().Find(id);
@@ -46,6 +58,15 @@ namespace SmartStudyPlanner.Infrastructure.Repositories
         {
              _context.Set<T>().Update(entity);
         }
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+        public async Task AddAsync(T entity) {            
+            await _context.Set<T>().AddAsync(entity);
+
+        }
         
+       
     }
 }

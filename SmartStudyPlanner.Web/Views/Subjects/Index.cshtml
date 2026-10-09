@@ -1,0 +1,27 @@
+﻿@using SmartStudyPlanner.Domain.Entities
+@model IEnumerable<Subject>
+
+<h2>Subjects</h2>
+
+@if (Model != null && Model.Any())
+{
+    @foreach (var subject in Model)
+    {
+        <div>
+            <h3>@subject.Name</h3>
+            <p>@subject.Description</p>
+            <p>Difficulty: @subject.Difficulty</p>
+            <p>Progress: @subject.Progress%</p>
+
+            <a asp-controller="Subjects"
+               asp-action="Details"
+               asp-route-id="@subject.Id">
+                Details
+            </a>
+        </div>
+    }
+}
+else
+{
+    <p>No subjects found.</p>
+}

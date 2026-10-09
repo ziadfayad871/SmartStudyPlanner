@@ -17,5 +17,12 @@ namespace SmartStudyPlanner.Application.Interfaces
         void Delete(T entity) ;
         // save changes to the database:
         void SaveChanges();
+        // get all entities of type T asynchronously
+        Task<IEnumerable<T>> GetAllAsync();
+        // get an entity of type T by id asynchronously
+        Task<T?> GetByIdAsync(int id);
+        Task SaveChangesAsync();
+        Task AddAsync(T entity);
+        
     }
 }
