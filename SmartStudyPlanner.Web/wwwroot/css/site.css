@@ -1,4 +1,5 @@
 :root {
+    color-scheme: light;
     --sidebar-bg: #2b1d14;
     --sidebar-hover: #3d2b1e;
     --sidebar-active: #4a3423;
@@ -25,6 +26,30 @@
 
     --radius: 14px;
     --radius-sm: 10px;
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+    --sidebar-bg: #1c1512;
+    --sidebar-hover: #2a211b;
+    --sidebar-active: #3a2c1f;
+    --sidebar-text: #b3a08d;
+
+    --page-bg: #161110;
+    --card-bg: #221b17;
+    --border-color: #3a2d23;
+
+    --primary-soft: #47280f;
+
+    --text-dark: #f2e9dd;
+    --text-muted: #a89481;
+
+    --easy-bg: #123a24;
+    --easy-text: #4ade80;
+    --medium-bg: #45300a;
+    --medium-text: #fbbf24;
+    --hard-bg: #451a1a;
+    --hard-text: #f87171;
 }
 
 * {
@@ -428,7 +453,7 @@ html, body {
     border-radius: var(--radius-sm);
     font-size: 14px;
     color: var(--text-dark);
-    background: #fff;
+    background: var(--card-bg);
     outline: none;
 }
 
