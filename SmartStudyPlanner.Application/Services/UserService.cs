@@ -1,6 +1,5 @@
 ﻿using SmartStudyPlanner.Application.Interfaces;
 using SmartStudyPlanner.Domain.Entities;
-
 namespace SmartStudyPlanner.Application.Services
 {
     public class UserService : IUserService

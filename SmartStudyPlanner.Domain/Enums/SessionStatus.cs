@@ -1,14 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SmartStudyPlanner.Domain.Enums
+﻿namespace SmartStudyPlanner.Domain.Enums
 {
     public enum SessionStatus
     {
         Scheduled,
-Completed,
-Missed,
-Cancelled
+        Completed,
+        Missed,
+        Cancelled
+    }
+
+    public enum TaskStatus
+    {
+        Pending,
+        InProgress,
+        Completed
     }
 }

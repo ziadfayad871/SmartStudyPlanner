@@ -162,6 +162,9 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("EstimatedMinutes")
                         .HasColumnType("int");
 
@@ -171,6 +174,9 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<int>("SubjectId")
                         .HasColumnType("int");
 
@@ -178,9 +184,14 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SubjectId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Tasks");
                 });
@@ -281,7 +292,15 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SmartStudyPlanner.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("Subject");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SmartStudyPlanner.Domain.Entities.Subject", b =>

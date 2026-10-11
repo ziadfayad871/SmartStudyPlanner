@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
 
-namespace SmartStudyPlanner.Application.Services
+namespace SmartStudyPlanner.Application.Interfaces
 {
     public interface ISubjectService
     {

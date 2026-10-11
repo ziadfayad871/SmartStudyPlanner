@@ -25,6 +25,8 @@ namespace SmartStudyPlanner.Web
             builder.Services.AddScoped<IStudyPlanningService, StudyPlanningService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+            builder.Services.AddScoped<ITaskService, TaskService>();
 
             var app = builder.Build();
 
@@ -133,6 +135,60 @@ namespace SmartStudyPlanner.Web
                     Color = "#06b6d4",
                     EstimatedMinutes = 60,
                     UserId = user.Id
+                }
+            );
+
+            db.SaveChanges();
+
+            var subjects = db.Subjects.Where(s => s.UserId == user.Id).ToList();
+            var csharp = subjects.FirstOrDefault(s => s.Name == "C#");
+            var sql = subjects.FirstOrDefault(s => s.Name == "SQL");
+            var math = subjects.FirstOrDefault(s => s.Name == "Math");
+
+            db.Tasks.AddRange(
+                new Domain.Entities.Task
+                {
+                    Title = "Finish C# LINQ exercises",
+                    SubjectId = csharp!.Id,
+                    UserId = user.Id,
+                    Priority = Domain.Enums.Priority.High,
+                    EstimatedMinutes = 90,
+                    DueDate = today.AddDays(1),
+                    Status = Domain.Enums.TaskStatus.InProgress,
+                    IsCompleted = false
+                },
+                new Domain.Entities.Task
+                {
+                    Title = "Read SQL joins chapter",
+                    SubjectId = sql!.Id,
+                    UserId = user.Id,
+                    Priority = Domain.Enums.Priority.Medium,
+                    EstimatedMinutes = 45,
+                    DueDate = today,
+                    Status = Domain.Enums.TaskStatus.Pending,
+                    IsCompleted = false
+                },
+                new Domain.Entities.Task
+                {
+                    Title = "Solve math practice problems",
+                    SubjectId = math!.Id,
+                    UserId = user.Id,
+                    Priority = Domain.Enums.Priority.High,
+                    EstimatedMinutes = 60,
+                    DueDate = today.AddDays(2),
+                    Status = Domain.Enums.TaskStatus.Pending,
+                    IsCompleted = false
+                },
+                new Domain.Entities.Task
+                {
+                    Title = "Review OOP concepts",
+                    SubjectId = csharp.Id,
+                    UserId = user.Id,
+                    Priority = Domain.Enums.Priority.Medium,
+                    EstimatedMinutes = 30,
+                    DueDate = today.AddDays(-1),
+                    Status = Domain.Enums.TaskStatus.Completed,
+                    IsCompleted = true
                 }
             );
 

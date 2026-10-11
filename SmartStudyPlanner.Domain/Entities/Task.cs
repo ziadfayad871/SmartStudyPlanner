@@ -1,7 +1,5 @@
 ﻿using SmartStudyPlanner.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using TaskStatus = SmartStudyPlanner.Domain.Enums.TaskStatus;
 
 namespace SmartStudyPlanner.Domain.Entities
 {
@@ -10,12 +8,13 @@ namespace SmartStudyPlanner.Domain.Entities
         public int Id { get; set; }
         public int SubjectId { get; set; }
         public string Title { get; set; } = string.Empty;
-        public int EstimatedMinutes { get; set; } 
-        // periority : 
+        public int EstimatedMinutes { get; set; }
         public Priority Priority { get; set; }
-        // IsCompleted
         public bool IsCompleted { get; set; } = false;
-        // navegation property
         public Subject Subject { get; set; } = null!;
+        public DateTime DueDate { get; set; }
+        public int UserId { get; set; }
+        public User User { get; set; } = null!;
+        public TaskStatus Status { get; set; } = TaskStatus.Pending;
     }
 }

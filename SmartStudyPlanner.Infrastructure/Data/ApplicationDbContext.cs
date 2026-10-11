@@ -49,6 +49,12 @@ public DbSet<User> Users { get; set; }
                 .WithOne(ss => ss.Subject)
                 .HasForeignKey(ss => ss.SubjectId);
 
+            modelBuilder.Entity<Task>()
+                .HasOne(t => t.User)
+                .WithMany()
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
