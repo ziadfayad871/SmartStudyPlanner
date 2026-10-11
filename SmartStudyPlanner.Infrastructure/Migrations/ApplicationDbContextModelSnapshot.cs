@@ -30,11 +30,11 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("AvailableFrom")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeOnly>("AvailableFrom")
+                        .HasColumnType("time");
 
-                    b.Property<DateTime>("AvailableTo")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeOnly>("AvailableTo")
+                        .HasColumnType("time");
 
                     b.Property<int>("DayOfWeek")
                         .HasColumnType("int");
@@ -88,11 +88,11 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("time");
 
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time");
 
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");

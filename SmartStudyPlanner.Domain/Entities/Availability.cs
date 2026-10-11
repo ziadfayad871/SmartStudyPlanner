@@ -14,8 +14,8 @@ AvailableTo*/
         public int Id { get; set; }
         public int UserId { get; set; }
         public DayOfWeek DayOfWeek { get; set; }
-        public DateTime AvailableFrom { get; set; }
-        public DateTime AvailableTo { get; set; }
+        public TimeOnly AvailableFrom { get; set; }
+        public TimeOnly AvailableTo { get; set; }
         // Navigation property to the User entity
         public User User { get; set; } = null!;
     }
