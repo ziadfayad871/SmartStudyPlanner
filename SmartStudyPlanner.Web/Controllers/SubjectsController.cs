@@ -4,24 +4,29 @@ using SmartStudyPlanner.Application.DTOs;
 using SmartStudyPlanner.Application.Interfaces;
 using SmartStudyPlanner.Application.Services;
 using SmartStudyPlanner.Domain.Entities;
+using System.Security.Claims;
 
 namespace SmartStudyPlanner.Web.Controllers
 {
     [Authorize]
     public class SubjectsController : Controller
     {
-        private readonly IRepository<User> _userRepository;
         private readonly ISubjectService _subjectService;
 
-        public SubjectsController(ISubjectService subjectService, IRepository<User> userRepository)
+        public SubjectsController(ISubjectService subjectService)
         {
             _subjectService = subjectService;
-            _userRepository = userRepository;
+        }
+
+        private int GetCurrentUserId()
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            return claim != null ? int.Parse(claim.Value) : 0;
         }
 
         public async Task<IActionResult> Index(string? search)
         {
-            var allSubjects = (await _subjectService.GetAllSubjects()).ToList();
+            var allSubjects = _subjectService.GetSubjectsByUserId(GetCurrentUserId()).ToList();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -38,7 +43,7 @@ namespace SmartStudyPlanner.Web.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var foundSubject = await _subjectService.GetSubjectByIdAsync(id);
-            if (foundSubject == null)
+            if (foundSubject == null || foundSubject.UserId != GetCurrentUserId())
             {
                 return NotFound();
             }
@@ -55,13 +60,7 @@ namespace SmartStudyPlanner.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SubjectDto subjectDto)
         {
-            var defaultUser = _userRepository.GetAll().FirstOrDefault();
-            if (defaultUser == null)
-            {
-                ModelState.AddModelError(string.Empty, "No user found. Please seed a user first.");
-                return View(subjectDto);
-            }
-            subjectDto.UserId = defaultUser.Id;
+            subjectDto.UserId = GetCurrentUserId();
 
             if (!ModelState.IsValid)
             {
@@ -77,7 +76,7 @@ namespace SmartStudyPlanner.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var foundSubject = await _subjectService.GetSubjectByIdAsync(id);
-            if (foundSubject == null)
+            if (foundSubject == null || foundSubject.UserId != GetCurrentUserId())
             {
                 return NotFound();
             }
@@ -94,11 +93,11 @@ namespace SmartStudyPlanner.Web.Controllers
             }
 
             var existing = await _subjectService.GetSubjectByIdAsync(id);
-            if (existing == null)
+            if (existing == null || existing.UserId != GetCurrentUserId())
             {
                 return NotFound();
             }
-            subjectDto.UserId = existing.UserId;
+            subjectDto.UserId = GetCurrentUserId();
 
             if (!ModelState.IsValid)
             {
@@ -114,7 +113,7 @@ namespace SmartStudyPlanner.Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var foundSubject = await _subjectService.GetSubjectByIdAsync(id);
-            if (foundSubject == null)
+            if (foundSubject == null || foundSubject.UserId != GetCurrentUserId())
             {
                 return NotFound();
             }
@@ -123,8 +122,14 @@ namespace SmartStudyPlanner.Web.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var existing = await _subjectService.GetSubjectByIdAsync(id);
+            if (existing == null || existing.UserId != GetCurrentUserId())
+            {
+                return NotFound();
+            }
+
             _subjectService.DeleteSubject(id);
 
             return RedirectToAction(nameof(Index));

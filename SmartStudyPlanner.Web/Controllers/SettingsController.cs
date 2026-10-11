@@ -9,10 +9,12 @@ namespace SmartStudyPlanner.Web.Controllers
     public class SettingsController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IWebHostEnvironment _env;
 
-        public SettingsController(IUserService userService)
+        public SettingsController(IUserService userService, IWebHostEnvironment env)
         {
             _userService = userService;
+            _env = env;
         }
 
         private int GetCurrentUserId()
@@ -32,7 +34,7 @@ namespace SmartStudyPlanner.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(string name, string email, string academicLevel, string? profilePictureUrl)
+        public async Task<IActionResult> Index(string name, string email, string academicLevel, string? profilePictureUrl, IFormFile? photo)
         {
             var user = await _userService.GetUserById(GetCurrentUserId());
             if (user == null)
@@ -54,9 +56,26 @@ namespace SmartStudyPlanner.Web.Controllers
             user.Name = name;
             user.Email = email;
             user.AcademicLevel = academicLevel ?? string.Empty;
-            user.ProfilePictureUrl = profilePictureUrl ?? string.Empty;
+
+            if (photo != null && photo.Length > 0)
+            {
+                var uploadsDir = Path.Combine(_env.WebRootPath, "uploads");
+                Directory.CreateDirectory(uploadsDir);
+                var fileName = $"user{user.Id}_{Guid.NewGuid():N}{Path.GetExtension(photo.FileName)}";
+                var filePath = Path.Combine(uploadsDir, fileName);
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    await photo.CopyToAsync(stream);
+                }
+                user.ProfilePictureUrl = "/uploads/" + fileName;
+            }
+            else
+            {
+                user.ProfilePictureUrl = profilePictureUrl ?? string.Empty;
+            }
 
             await _userService.Update(user);
+            TempData["Success"] = "Profile updated successfully.";
 
             return View(user);
         }

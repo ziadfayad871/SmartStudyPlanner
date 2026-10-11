@@ -33,31 +33,32 @@
         <h2 style="font-size:18px; font-weight:700; margin-bottom:4px;">Profile Information</h2>
         <p style="color:var(--text-muted); font-size:13px; margin-bottom:24px;">Update your personal information.</p>
 
-        <div class="profile-header">
-            <div class="avatar">
-                @if (!string.IsNullOrEmpty(Model?.ProfilePictureUrl))
-                {
-                    <img src="@Model.ProfilePictureUrl" alt="Profile" />
-                }
-                else
-                {
-                    <span>@(Model?.Name?.Substring(0, 1).ToUpper() ?? "?")</span>
-                }
-            </div>
-            <button type="button" class="btn-outline-soft" style="padding:8px 14px; font-size:13px;">
-                <i class="fas fa-camera"></i> Change Photo
-            </button>
-        </div>
+        <form asp-controller="Settings" asp-action="Index" method="post" enctype="multipart/form-data">
+            @if (TempData["Success"] != null)
+            {
+                <div style="background:#dcfce7; color:#16a34a; padding:10px 16px; border-radius:10px; margin-bottom:18px; font-size:14px;">
+                    <i class="fas fa-check-circle"></i> @TempData["Success"]
+                </div>
+            }
 
-        @if (TempData["Success"] != null)
-        {
-            <div style="background:#dcfce7; color:#16a34a; padding:10px 16px; border-radius:10px; margin-bottom:18px; font-size:14px;">
-                <i class="fas fa-check-circle"></i> @TempData["Success"]
-            </div>
-        }
-
-        <form asp-controller="Settings" asp-action="Index" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="profile-header">
+                <div class="avatar" id="avatarPreview">
+                    @if (!string.IsNullOrEmpty(Model?.ProfilePictureUrl))
+                    {
+                        <img src="@Model.ProfilePictureUrl" alt="Profile" id="avatarImg" />
+                    }
+                    else
+                    {
+                        <span id="avatarInitial">@(Model?.Name?.Substring(0, 1).ToUpper() ?? "?")</span>
+                    }
+                </div>
+                <input type="file" id="photoInput" name="photo" accept="image/*" style="display:none;" />
+                <button type="button" class="btn-outline-soft" style="padding:8px 14px; font-size:13px;" onclick="document.getElementById('photoInput').click();">
+                    <i class="fas fa-camera"></i> Change Photo
+                </button>
+            </div>
 
             <div class="form-group">
                 <label>Full Name</label>
@@ -88,3 +89,18 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.getElementById('photoInput').addEventListener('change', function (e) {
+            var file = e.target.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+                var container = document.getElementById('avatarPreview');
+                container.innerHTML = '<img src="' + ev.target.result + '" alt="Profile" id="avatarImg" />';
+            };
+            reader.readAsDataURL(file);
+        });
+    </script>
+}
