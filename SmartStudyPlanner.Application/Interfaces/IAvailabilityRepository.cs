@@ -8,6 +8,6 @@ namespace SmartStudyPlanner.Application.Interfaces
     public interface IAvailabilityRepository : IRepository<Availability>
     {
         IEnumerable<Availability> GetByUserId(int userId);
-        IEnumerable<Availability> GetByUserIdAndDate(int userId, DateTime date);
+        IEnumerable<Availability> GetByUserIdAndDay(int userId, DayOfWeek day);
     }
 }

@@ -19,5 +19,7 @@ namespace SmartStudyPlanner.Application.Interfaces
         void DeleteStudySession(StudySession studySession);
         // get sessions for a user on a specific date
         IEnumerable<StudySession> GetStudySessionsForUserOnDate(int userId, DateTime date);
+        // mark a session as completed
+        void MarkCompleted(int sessionId);
     }
 }

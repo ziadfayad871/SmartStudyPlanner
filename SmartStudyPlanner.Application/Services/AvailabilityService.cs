@@ -8,34 +8,44 @@ namespace SmartStudyPlanner.Application.Services
 {
     public class AvailabilityService : IAvailabilityService
     {
-       private readonly IRepository<StudySession> _studySessionRepository;
-        public AvailabilityService(IRepository<StudySession> studySessionRepository)
+        private readonly IAvailabilityRepository _availabilityRepository;
+        public AvailabilityService(IAvailabilityRepository availabilityRepository)
         {
-            _studySessionRepository = studySessionRepository;
+            _availabilityRepository = availabilityRepository;
         }
-        public void DeleteAvailability(int AvailabilityId)
+
+        public void DeleteAvailability(int availabilityId)
         {
-           var studySession = _studySessionRepository.GetById(AvailabilityId);
-            if (studySession != null)
+            var availability = _availabilityRepository.GetById(availabilityId);
+            if (availability != null)
             {
-                _studySessionRepository.Delete(studySession);
+                _availabilityRepository.Delete(availability);
+                _availabilityRepository.SaveChanges();
             }
         }
 
-        public IEnumerable<StudySession>  GetUserAvailability(int userId)
+        public IEnumerable<Availability> GetUserAvailability(int userId)
         {
-            return _studySessionRepository.GetAll()
-                .Where(s => s.UserId == userId)
-                .ToList();
-
+            return _availabilityRepository.GetByUserId(userId);
         }
 
-        public void SetAvailability(IEnumerable<StudySession> availability)
+        public IEnumerable<Availability> GetUserAvailabilityByDay(int userId, DayOfWeek day)
         {
-            foreach (var session in availability)
+            return _availabilityRepository.GetByUserIdAndDay(userId, day);
+        }
+
+        public void SetAvailability(Availability availability)
+        {
+            if (availability == null)
             {
-                _studySessionRepository.Add(session);
+                throw new ArgumentNullException(nameof(availability));
             }
+            if (availability.AvailableFrom >= availability.AvailableTo)
+            {
+                throw new ArgumentException("AvailableFrom must be before AvailableTo.");
+            }
+            _availabilityRepository.Add(availability);
+            _availabilityRepository.SaveChanges();
         }
     }
 }

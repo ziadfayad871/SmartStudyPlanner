@@ -22,17 +22,13 @@ namespace SmartStudyPlanner.Infrastructure.Repositories
             return _context.Availabilities.Where(a => a.UserId == userId).ToList();
         }
 
-        IEnumerable<Availability> IAvailabilityRepository.GetByUserIdAndDate(int userId, DateTime date)
+        IEnumerable<Availability> IAvailabilityRepository.GetByUserIdAndDay(int userId, DayOfWeek day)
         {
             if (userId <= 0)
             {
                 throw new ArgumentException("UserId must be greater than zero.", nameof(userId));
             }
-            if (date == DateTime.MinValue)
-            {
-                throw new ArgumentException("Date cannot be the default value.", nameof(date));
-            }
-            return _context.Availabilities.Where(a => a.UserId == userId && a.DayOfWeek == date.DayOfWeek).ToList();
+            return _context.Availabilities.Where(a => a.UserId == userId && a.DayOfWeek == day).ToList();
         }
     }
 }
