@@ -23,7 +23,11 @@ namespace SmartStudyPlanner.Application.DTOs
 
         public DateTime? ExamDate { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a user.")]
+        [RegularExpression(@"^#([0-9A-Fa-f]{6})$",
+            ErrorMessage = "Color must be a valid hex color (e.g. #F97316).")]
+        public string Color { get; set; } = "#F97316";
+
+        // Assigned server-side; not validated from the form.
         public int UserId { get; set; }
     }
 }

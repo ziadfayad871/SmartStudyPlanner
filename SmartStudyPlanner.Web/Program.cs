@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SmartStudyPlanner.Application.Interfaces;
 using SmartStudyPlanner.Application.Services;
+using SmartStudyPlanner.Domain.Entities;
+using SmartStudyPlanner.Domain.Enums;
 using SmartStudyPlanner.Infrastructure.Data;
 using SmartStudyPlanner.Infrastructure.Repositories;
 
@@ -25,6 +27,13 @@ namespace SmartStudyPlanner.Web
 
             var app = builder.Build();
 
+            // Apply migrations and seed data on startup
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                db.Database.Migrate();
+                SeedData(db);
+            }
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -46,6 +55,80 @@ namespace SmartStudyPlanner.Web
                 .WithStaticAssets();
 
             app.Run();
+        }
+
+        private static void SeedData(ApplicationDbContext db)
+        {
+            if (db.Users.Any())
+            {
+                return;
+            }
+
+            var user = new User { Name = "Ziad Youssef" };
+            db.Users.Add(user);
+            db.SaveChanges();
+
+            var today = DateTime.Today;
+
+            db.Subjects.AddRange(
+                new Subject
+                {
+                    Name = "C#",
+                    Description = "Object-oriented programming, LINQ and .NET fundamentals.",
+                    Difficulty = Difficulty.Hard,
+                    Progress = 45,
+                    ExamDate = today.AddDays(10),
+                    Color = "#3b82f6",
+                    EstimatedMinutes = 90,
+                    UserId = user.Id
+                },
+                new Subject
+                {
+                    Name = "SQL",
+                    Description = "Joins, functions, indexing and query optimization.",
+                    Difficulty = Difficulty.Medium,
+                    Progress = 70,
+                    ExamDate = today.AddDays(5),
+                    Color = "#f97316",
+                    EstimatedMinutes = 45,
+                    UserId = user.Id
+                },
+                new Subject
+                {
+                    Name = "Math",
+                    Description = "Algebra, calculus and integration techniques.",
+                    Difficulty = Difficulty.Hard,
+                    Progress = 20,
+                    ExamDate = today.AddDays(3),
+                    Color = "#8b5cf6",
+                    EstimatedMinutes = 60,
+                    UserId = user.Id
+                },
+                new Subject
+                {
+                    Name = "Communication",
+                    Description = "Technical writing and presentation skills.",
+                    Difficulty = Difficulty.Easy,
+                    Progress = 60,
+                    ExamDate = today.AddDays(12),
+                    Color = "#10b981",
+                    EstimatedMinutes = 30,
+                    UserId = user.Id
+                },
+                new Subject
+                {
+                    Name = "Physics",
+                    Description = "Mechanics, waves and modern physics.",
+                    Difficulty = Difficulty.Medium,
+                    Progress = 35,
+                    ExamDate = today.AddDays(15),
+                    Color = "#06b6d4",
+                    EstimatedMinutes = 60,
+                    UserId = user.Id
+                }
+            );
+
+            db.SaveChanges();
         }
     }
 }

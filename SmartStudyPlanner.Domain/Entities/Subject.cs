@@ -22,6 +22,8 @@ namespace SmartStudyPlanner.Domain.Entities
         public ICollection<StudySession> StudySessions { get; set; } = new List<StudySession>();
         public ICollection<Task> Tasks { get; set; } = new List<Task>();
         public int  EstimatedMinutes { get; set; } 
+        // hex color code for the subject card (e.g. #F97316)
+        public string Color { get; set; } = "#F97316";
         public int UserId { get; set; }
         public User User { get; set; } = null!;
     }

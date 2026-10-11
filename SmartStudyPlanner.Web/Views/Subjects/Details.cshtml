@@ -1,11 +1,63 @@
 ﻿@using SmartStudyPlanner.Application.DTOs
 @model SubjectDto
 
-<h2>Subject Details</h2>
+@{
+    ViewData["Title"] = Model.Name;
+    var daysLeft = Model.ExamDate.HasValue
+        ? (Model.ExamDate.Value.Date - DateTime.Today).Days
+        : (int?)null;
+}
 
-<div>
-    <h3>@Model.Name</h3>
-    <p>@Model.Description</p>
-    <p>@Model.Difficulty</p>
-    <p>@Model.Progress%</p>
+<a asp-controller="Subjects" asp-action="Index" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Subjects
+</a>
+
+<div class="card form-card" style="max-width:560px;">
+    <div style="display:flex; align-items:center; gap:16px; margin-bottom:24px;">
+        <div class="subject-icon" style="background:@(string.IsNullOrWhiteSpace(Model.Color) ? "#f97316" : Model.Color); width:52px; height:52px; font-size:20px;">
+            @Model.Name.Substring(0, 1).ToUpper()
+        </div>
+        <div>
+            <h1 class="page-title" style="margin-bottom:2px;">@Model.Name</h1>
+            <span class="badge-difficulty badge-@Model.Difficulty.ToString().ToLower()">@Model.Difficulty</span>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Description))
+    {
+        <p style="color:var(--text-muted); font-size:14px; margin-bottom:20px;">@Model.Description</p>
+    }
+
+    <div class="detail-row">
+        <span class="detail-label">Progress</span>
+        <span class="detail-value">@Model.Progress%</span>
+    </div>
+    <div class="progress-wrapper" style="margin:10px 0 20px;">
+        <div class="progress-track">
+            <div class="progress-fill" style="width:@Model.Progress%; background:@(string.IsNullOrWhiteSpace(Model.Color) ? "#f97316" : Model.Color);"></div>
+        </div>
+    </div>
+    <div class="detail-row">
+        <span class="detail-label">Exam Date</span>
+        <span class="detail-value">@(Model.ExamDate?.ToString("MMM d, yyyy") ?? "Not set")</span>
+    </div>
+    <div class="detail-row">
+        <span class="detail-label">Time Until Exam</span>
+        <span class="detail-value">
+            @(daysLeft switch
+            {
+                null => "No date set",
+                < 0 => $"Overdue by {Math.Abs(daysLeft.Value)} days",
+                0 => "Today!",
+                1 => "1 day left",
+                _ => $"{daysLeft} days left"
+            })
+        </span>
+    </div>
+
+    <div class="form-actions">
+        <a asp-controller="Subjects" asp-action="Edit" asp-route-id="@Model.Id" class="btn-primary">
+            <i class="fas fa-pen"></i> Edit Subject
+        </a>
+    </div>
 </div>

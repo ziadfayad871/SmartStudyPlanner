@@ -1,88 +1,84 @@
-﻿```cshtml
-@using SmartStudyPlanner.Application.DTOs
-@using SmartStudyPlanner.Domain.Entities
+﻿@using SmartStudyPlanner.Application.DTOs
 @model SubjectDto
 
 @{
-    ViewData["Title"] = "Add Subject";
+    ViewData["Title"] = "Add New Subject";
+    var colors = new[] { "#f97316", "#8b5cf6", "#3b82f6", "#10b981", "#ec4899" };
 }
 
-<h2>Add New Subject</h2>
-@if (ViewBag.Errors != null)
-{
-    <div class="alert alert-danger">
-        <ul>
-            @foreach (var error in ViewBag.Errors)
-            {
-                <li>@error</li>
-            }
-        </ul>
-    </div>
-}
+<a asp-controller="Subjects" asp-action="Index" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Subjects
+</a>
 
-<form asp-controller="Subjects" asp-action="Create" method="post">
+<div class="card form-card">
+    <h1 class="page-title" style="margin-bottom:24px;">Add New Subject</h1>
 
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label">Subject Name</label>
-        <input asp-for="Name" class="form-control" placeholder="Enter subject name" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="UserId" class="form-label">User</label>
+    <form asp-controller="Subjects" asp-action="Create" method="post" id="subjectForm">
+        <div class="form-group">
+            <label asp-for="Name">Subject Name <span class="required">*</span></label>
+            <input asp-for="Name" type="text" placeholder="e.g. C#" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
 
-        <select asp-for="UserId" class="form-select">
-            <option value="">Select User</option>
+        <div class="form-group">
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" placeholder="Brief description about the subject..."></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
 
-            @foreach (var user in ViewBag.Users as List<User>
-                ?? new List<User>())
-            {
-                <option value="@user.Id">@user.Name</option>
-            }
-        </select>
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="Difficulty">Difficulty <span class="required">*</span></label>
+                <select asp-for="Difficulty" asp-items="Html.GetEnumSelectList<SmartStudyPlanner.Domain.Enums.Difficulty>()">
+                </select>
+                <span asp-validation-for="Difficulty" class="text-danger"></span>
+            </div>
 
-        <span asp-validation-for="UserId" class="text-danger"></span>
-    </div>
+            <div class="form-group">
+                <div class="slider-header">
+                    <label asp-for="Progress" style="margin-bottom:0;">Current Progress <span class="required">*</span></label>
+                    <span class="slider-value" id="progressValue">0%</span>
+                </div>
+                <input asp-for="Progress" type="range" min="0" max="100" value="0" oninput="document.getElementById('progressValue').textContent = this.value + '%'" />
+                <span asp-validation-for="Progress" class="text-danger"></span>
+            </div>
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="Description" class="form-label">Description</label>
-        <textarea asp-for="Description" class="form-control" rows="3"
-                  placeholder="Enter subject description"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="ExamDate">Exam Date <span class="required">*</span></label>
+            <input asp-for="ExamDate" type="date" />
+            <span asp-validation-for="ExamDate" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="Difficulty" class="form-label">Difficulty</label>
-        <select asp-for="Difficulty"
-                class="form-select"
-                asp-items="Html.GetEnumSelectList<SmartStudyPlanner.Domain.Enums.Difficulty>()">
-        </select>
-        <span asp-validation-for="Difficulty" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label>Color</label>
+            <div class="color-swatches" id="colorSwatches">
+                @for (var i = 0; i < colors.Length; i++)
+                {
+                    <div class="color-swatch @(i == 0 ? "selected" : "")"
+                         style="background:@colors[i];"
+                         data-color="@colors[i]"
+                         onclick="selectColor(this)"></div>
+                }
+            </div>
+            <input asp-for="Color" type="hidden" id="selectedColor" value="@colors[0]" />
+            <span asp-validation-for="Color" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="Progress" class="form-label">Progress (%)</label>
-        <input asp-for="Progress" type="number" min="0" max="100"
-               class="form-control" />
-        <span asp-validation-for="Progress" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="ExamDate" class="form-label">Exam Date</label>
-        <input asp-for="ExamDate" type="date" class="form-control" />
-        <span asp-validation-for="ExamDate" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save Subject</button>
-
-    <a asp-controller="Subjects"
-       asp-action="Index"
-       class="btn btn-secondary">
-        Cancel
-    </a>
-
-</form>
+        <div class="form-actions">
+            <a asp-controller="Subjects" asp-action="Index" class="btn-outline-soft">Cancel</a>
+            <button type="submit" class="btn-primary">Save Subject</button>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        function selectColor(el) {
+            document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById('selectedColor').value = el.getAttribute('data-color');
+        }
+    </script>
 }
-```

@@ -30,6 +30,7 @@ namespace SmartStudyPlanner.Application.Services
                 Difficulty = subject.Difficulty,
                 Progress = subject.Progress,
                 ExamDate = subject.ExamDate,
+                Color = string.IsNullOrWhiteSpace(subject.Color) ? "#F97316" : subject.Color,
                 UserId = subject.UserId
             };
         }
@@ -80,6 +81,7 @@ namespace SmartStudyPlanner.Application.Services
                 Difficulty = subjectDto.Difficulty,
                 Progress = subjectDto.Progress,
                 ExamDate = subjectDto.ExamDate,
+                Color = string.IsNullOrWhiteSpace(subjectDto.Color) ? "#F97316" : subjectDto.Color,
                 UserId = subjectDto.UserId,
             };
 
@@ -117,6 +119,7 @@ namespace SmartStudyPlanner.Application.Services
             subject.Difficulty = subjectDto.Difficulty;
             subject.Progress = subjectDto.Progress;
             subject.ExamDate = subjectDto.ExamDate;
+            subject.Color = string.IsNullOrWhiteSpace(subjectDto.Color) ? "#F97316" : subjectDto.Color;
             subject.UserId = subjectDto.UserId;
 
             _subjectRepository.Update(subject);

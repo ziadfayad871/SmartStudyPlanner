@@ -1,54 +1,139 @@
-﻿```cshtml
-@using SmartStudyPlanner.Application.DTOs
+﻿@using SmartStudyPlanner.Application.DTOs
 @model IEnumerable<SubjectDto>
 
-<h2>Subjects</h2>
+@{
+    ViewData["Title"] = "My Subjects";
+    var subjectColors = new[] { "#3b82f6", "#f97316", "#8b5cf6", "#10b981", "#06b6d4" };
+}
 
-<a asp-controller="Subjects"
-   asp-action="Create"
-   class="btn btn-primary">
-    + Add Subject
-</a>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">My Subjects</h1>
+        <p class="page-subtitle">Manage your subjects, track progress and add new ones.</p>
+    </div>
+    <a asp-controller="Subjects" asp-action="Create" class="btn-primary">
+        <i class="fas fa-plus"></i> Add Subject
+    </a>
+</div>
 
-<hr />
+<div class="search-box">
+    <i class="fas fa-search"></i>
+    <input type="text" id="subjectSearch" placeholder="Search subjects..." value="@ViewBag.Search" />
+</div>
+
+<div class="card">
+    <table class="subjects-table" id="subjectsTable">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Difficulty</th>
+                <th>Progress</th>
+                <th>Exam Date</th>
+                <th style="text-align:right;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                var index = 0;
+                foreach (var subject in Model)
+                {
+                    var color = string.IsNullOrWhiteSpace(subject.Color)
+                        ? subjectColors[index % subjectColors.Length]
+                        : subject.Color;
+                    var daysLeft = subject.ExamDate.HasValue
+                        ? (subject.ExamDate.Value.Date - DateTime.Today).Days
+                        : (int?)null;
+                    var examText = daysLeft switch
+                    {
+                        null => "No date set",
+                        < 0 => $"Overdue {Math.Abs(daysLeft.Value)}d",
+                        0 => "Today!",
+                        1 => "1 day left",
+                        _ => $"{daysLeft} days left"
+                    };
+                    var examClass = daysLeft switch
+                    {
+                        null => "text-muted",
+                        < 0 => "text-danger",
+                        <= 3 => "text-danger fw-bold",
+                        _ => ""
+                    };
+                    <tr data-name="@subject.Name.ToLower()" data-description="@subject.Description.ToLower()">
+                        <td>
+                            <div class="subject-cell">
+                                <div class="subject-icon" style="background:@color;">
+                                    @subject.Name.Substring(0, 1).ToUpper()
+                                </div>
+                                @subject.Name
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge-difficulty badge-@subject.Difficulty.ToString().ToLower()">
+                                @subject.Difficulty
+                            </span>
+                        </td>
+                        <td>
+                            <div class="progress-wrapper">
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width:@subject.Progress%; background:@color;"></div>
+                                </div>
+                                <span class="progress-value">@subject.Progress%</span>
+                            </div>
+                        </td>
+                        <td class="@examClass">@examText</td>
+                        <td style="text-align:right; white-space:nowrap;">
+                            <a asp-controller="Subjects" asp-action="Details" asp-route-id="@subject.Id"
+                               class="action-btn" title="Details">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a asp-controller="Subjects" asp-action="Edit" asp-route-id="@subject.Id"
+                               class="action-btn" title="Edit">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <a asp-controller="Subjects" asp-action="Delete" asp-route-id="@subject.Id"
+                               class="action-btn delete" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    index++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">
+                        <div class="empty-state">
+                            <i class="fas fa-book-open"></i>
+                            <p>No subjects found. Add your first subject to get started!</p>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @if (Model != null && Model.Any())
 {
-    @foreach (var subject in Model)
-    {
-        <div>
-            <h3>@subject.Name</h3>
-            <p>@subject.Description</p>
-            <p>Difficulty: @subject.Difficulty</p>
-            <p>Progress: @subject.Progress%</p>
-
-            <a asp-controller="Subjects"
-               asp-action="Details"
-               asp-route-id="@subject.Id"
-               class="btn btn-info">
-                Details
-            </a>
-
-            <a asp-controller="Subjects"
-               asp-action="Edit"
-               asp-route-id="@subject.Id"
-               class="btn btn-warning">
-                Edit
-            </a>
-
-            <a asp-controller="Subjects"
-               asp-action="Delete"
-               asp-route-id="@subject.Id"
-               class="btn btn-danger">
-                Delete
-            </a>
-        </div>
-
-        <hr />
-    }
+    <div style="display:flex; justify-content:flex-end; margin-top:18px;">
+        <a class="btn-outline-soft disabled-link" title="Coming soon">
+            View Full Plan <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
 }
-else
-{
-    <p>No subjects found.</p>
+
+@section Scripts {
+    <script>
+        document.getElementById('subjectSearch').addEventListener('input', function () {
+            var query = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#subjectsTable tbody tr[data-name]');
+            rows.forEach(function (row) {
+                var name = row.getAttribute('data-name');
+                var desc = row.getAttribute('data-description');
+                row.style.display = (name.includes(query) || desc.includes(query)) ? '' : 'none';
+            });
+        });
+    </script>
 }
-```
