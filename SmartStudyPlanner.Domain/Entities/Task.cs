@@ -11,10 +11,10 @@ namespace SmartStudyPlanner.Domain.Entities
         public int EstimatedMinutes { get; set; }
         public Priority Priority { get; set; }
         public bool IsCompleted { get; set; } = false;
-        public Subject Subject { get; set; } = null!;
+        public Subject? Subject { get; set; }
         public DateTime DueDate { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; } = null!;
+        public User? User { get; set; }
         public TaskStatus Status { get; set; } = TaskStatus.Pending;
     }
 }
