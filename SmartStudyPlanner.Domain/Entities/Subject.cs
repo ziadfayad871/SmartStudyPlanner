@@ -1,5 +1,4 @@
-﻿using SmartStudyPlanner.Domain.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -13,7 +12,9 @@ namespace SmartStudyPlanner.Domain.Entities
         public string Name { get; set; } = string.Empty; 
         // not null for description
         public string Description { get; set; } = string.Empty;
-        public Difficulty Difficulty { get; set; }
+        // difficulty as a percentage 0 (easy) - 100 (hard)
+        [Range(0, 100, ErrorMessage = "Difficulty must be between 0 and 100")]
+        public int Difficulty { get; set; }
         // not null for difficulty
         [Range(0, 100, ErrorMessage = "Progress must be between 0 and 100")]
         public int Progress { get; set; }

@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using SmartStudyPlanner.Application.Interfaces;
 using SmartStudyPlanner.Application.Services;
 using SmartStudyPlanner.Domain.Entities;
-using SmartStudyPlanner.Domain.Enums;
 using SmartStudyPlanner.Infrastructure.Data;
 using SmartStudyPlanner.Infrastructure.Repositories;
 
@@ -75,7 +74,7 @@ namespace SmartStudyPlanner.Web
                 {
                     Name = "C#",
                     Description = "Object-oriented programming, LINQ and .NET fundamentals.",
-                    Difficulty = Difficulty.Hard,
+                    Difficulty = 85,
                     Progress = 45,
                     ExamDate = today.AddDays(10),
                     Color = "#3b82f6",
@@ -86,7 +85,7 @@ namespace SmartStudyPlanner.Web
                 {
                     Name = "SQL",
                     Description = "Joins, functions, indexing and query optimization.",
-                    Difficulty = Difficulty.Medium,
+                    Difficulty = 55,
                     Progress = 70,
                     ExamDate = today.AddDays(5),
                     Color = "#f97316",
@@ -97,7 +96,7 @@ namespace SmartStudyPlanner.Web
                 {
                     Name = "Math",
                     Description = "Algebra, calculus and integration techniques.",
-                    Difficulty = Difficulty.Hard,
+                    Difficulty = 90,
                     Progress = 20,
                     ExamDate = today.AddDays(3),
                     Color = "#8b5cf6",
@@ -108,7 +107,7 @@ namespace SmartStudyPlanner.Web
                 {
                     Name = "Communication",
                     Description = "Technical writing and presentation skills.",
-                    Difficulty = Difficulty.Easy,
+                    Difficulty = 25,
                     Progress = 60,
                     ExamDate = today.AddDays(12),
                     Color = "#10b981",
@@ -119,7 +118,7 @@ namespace SmartStudyPlanner.Web
                 {
                     Name = "Physics",
                     Description = "Mechanics, waves and modern physics.",
-                    Difficulty = Difficulty.Medium,
+                    Difficulty = 60,
                     Progress = 35,
                     ExamDate = today.AddDays(15),
                     Color = "#06b6d4",

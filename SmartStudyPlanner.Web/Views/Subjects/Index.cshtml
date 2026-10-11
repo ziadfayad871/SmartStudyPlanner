@@ -69,9 +69,10 @@
                             </div>
                         </td>
                         <td>
-                            <span class="badge-difficulty badge-@subject.Difficulty.ToString().ToLower()">
-                                @subject.Difficulty
-                            </span>
+                            @{
+                                var diffColor = subject.Difficulty < 34 ? "#16a34a" : subject.Difficulty < 67 ? "#d97706" : "#dc2626";
+                            }
+                            <span style="color:@diffColor; font-weight:600;">@subject.Difficulty%</span>
                         </td>
                         <td>
                             <div class="progress-wrapper">

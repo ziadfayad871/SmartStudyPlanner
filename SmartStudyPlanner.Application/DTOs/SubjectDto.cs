@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using SmartStudyPlanner.Domain.Enums;
 
 namespace SmartStudyPlanner.Application.DTOs
 {
@@ -16,7 +15,8 @@ namespace SmartStudyPlanner.Application.DTOs
             ErrorMessage = "Description cannot exceed 500 characters.")]
         public string Description { get; set; } = string.Empty;
 
-        public Difficulty Difficulty { get; set; }
+        [Range(0, 100, ErrorMessage = "Difficulty must be between 0 and 100.")]
+        public int Difficulty { get; set; }
 
         [Range(0, 100, ErrorMessage = "Progress must be between 0 and 100.")]
         public int Progress { get; set; }

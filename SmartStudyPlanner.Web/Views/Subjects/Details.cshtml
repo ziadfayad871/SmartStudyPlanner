@@ -18,8 +18,11 @@
             @Model.Name.Substring(0, 1).ToUpper()
         </div>
         <div>
+            @{
+                var diffColor = Model.Difficulty < 34 ? "#16a34a" : Model.Difficulty < 67 ? "#d97706" : "#dc2626";
+            }
             <h1 class="page-title" style="margin-bottom:2px;">@Model.Name</h1>
-            <span class="badge-difficulty badge-@Model.Difficulty.ToString().ToLower()">@Model.Difficulty</span>
+            <span style="color:@diffColor; font-weight:600;">Difficulty: @Model.Difficulty%</span>
         </div>
     </div>
 

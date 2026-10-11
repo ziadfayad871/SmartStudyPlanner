@@ -21,9 +21,10 @@
     </div>
     <div class="detail-row">
         <span class="detail-label">Difficulty</span>
-        <span class="detail-value">
-            <span class="badge-difficulty badge-@Model.Difficulty.ToString().ToLower()">@Model.Difficulty</span>
-        </span>
+        @{
+            var diffColor = Model.Difficulty < 34 ? "#16a34a" : Model.Difficulty < 67 ? "#d97706" : "#dc2626";
+        }
+        <span class="detail-value" style="color:@diffColor;">@Model.Difficulty%</span>
     </div>
     <div class="detail-row">
         <span class="detail-label">Progress</span>

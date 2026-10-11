@@ -491,6 +491,53 @@ input[type="range"]::-webkit-slider-thumb {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* ===== Difficulty slider ===== */
+.difficulty-range {
+    background: linear-gradient(to right, var(--easy-text) 0%, var(--easy-text) 16%, var(--medium-text) 50%, var(--hard-text) 84%, var(--hard-text) 100%) !important;
+}
+
+.difficulty-range::-webkit-slider-thumb {
+    background: #fff !important;
+    border: 3px solid var(--text-dark) !important;
+    width: 22px !important;
+    height: 22px !important;
+}
+
+.difficulty-range::-moz-range-thumb {
+    background: #fff !important;
+    border: 3px solid var(--text-dark) !important;
+    width: 22px !important;
+    height: 22px !important;
+    border-radius: 50% !important;
+    cursor: pointer;
+}
+
+.difficulty-ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.difficulty-ticks span {
+    cursor: default;
+    opacity: 0.5;
+    transition: opacity 0.15s, color 0.15s;
+}
+
+.difficulty-ticks span.active {
+    opacity: 1;
+}
+
+.difficulty-ticks span.active.tick-easy { color: var(--easy-text); }
+.difficulty-ticks span.active.tick-medium { color: var(--medium-text); }
+.difficulty-ticks span.active.tick-hard { color: var(--hard-text); }
+
+.difficulty-label.diff-easy { color: var(--easy-text) !important; }
+.difficulty-label.diff-medium { color: var(--medium-text) !important; }
+.difficulty-label.diff-hard { color: var(--hard-text) !important; }
+
 /* ===== Color picker ===== */
 .color-swatches {
     display: flex;

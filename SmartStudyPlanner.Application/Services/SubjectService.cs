@@ -2,7 +2,6 @@
 using SmartStudyPlanner.Application.DTOs;
 using SmartStudyPlanner.Application.Interfaces;
 using SmartStudyPlanner.Domain.Entities;
-using SmartStudyPlanner.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +11,9 @@ namespace SmartStudyPlanner.Application.Services
 {
     public class SubjectService : ISubjectService
     {
+        // subjects at or above this difficulty percentage are considered "hard"
+        private const int HardDifficultyThreshold = 70;
+
         private readonly ISubjectRepository _subjectRepository;
 
         public SubjectService(ISubjectRepository subjectRepository)
@@ -139,29 +141,31 @@ namespace SmartStudyPlanner.Application.Services
             _subjectRepository.SaveChanges();
         }
 
-        // Get subjects with Hard difficulty
+        // Get subjects with high difficulty (>= 70%)
         public IEnumerable<SubjectDto> GetHardSubjects()
         {
             var subjects = _subjectRepository.GetAll()
-                .Where(s => s.Difficulty == Difficulty.Hard);
+                .Where(s => s.Difficulty >= HardDifficultyThreshold);
 
             return subjects.Select(MapToDto).ToList();
         }
 
-        // Get the first Hard subject
+        // Get the hardest subject (highest difficulty percentage)
         public SubjectDto? GetFirstHardSubject()
         {
             var subject = _subjectRepository.GetAll()
-                .FirstOrDefault(s => s.Difficulty == Difficulty.Hard);
+                .Where(s => s.Difficulty >= HardDifficultyThreshold)
+                .OrderByDescending(s => s.Difficulty)
+                .FirstOrDefault();
 
             return subject == null ? null : MapToDto(subject);
         }
 
-        // Check whether any Hard subjects exist
+        // Check whether any hard subjects exist
         public bool HasHardSubjects()
         {
             return _subjectRepository.GetAll()
-                .Any(s => s.Difficulty == Difficulty.Hard);
+                .Any(s => s.Difficulty >= HardDifficultyThreshold);
         }
 
         // Find a subject by name

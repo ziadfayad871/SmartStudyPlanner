@@ -32,9 +32,18 @@
 
         <div class="form-row">
             <div class="form-group">
-                <label asp-for="Difficulty">Difficulty <span class="required">*</span></label>
-                <select asp-for="Difficulty" asp-items="Html.GetEnumSelectList<SmartStudyPlanner.Domain.Enums.Difficulty>()">
-                </select>
+                <div class="slider-header">
+                    <label asp-for="Difficulty" style="margin-bottom:0;">Difficulty <span class="required">*</span></label>
+                    <span class="slider-value difficulty-label" id="difficultyValue">@Model.Difficulty%</span>
+                </div>
+                <input asp-for="Difficulty" type="range" min="0" max="100" value="@Model.Difficulty"
+                       class="difficulty-range"
+                       oninput="updateDifficulty(this.value)" />
+                <div class="difficulty-ticks">
+                    <span class="tick-easy">Easy</span>
+                    <span class="tick-medium">Medium</span>
+                    <span class="tick-hard">Hard</span>
+                </div>
                 <span asp-validation-for="Difficulty" class="text-danger"></span>
             </div>
 
@@ -84,5 +93,17 @@
             el.classList.add('selected');
             document.getElementById('selectedColor').value = el.getAttribute('data-color');
         }
+
+        var difficultyClasses = ['diff-easy', 'diff-medium', 'diff-hard'];
+
+        function updateDifficulty(value) {
+            var label = document.getElementById('difficultyValue');
+            label.textContent = value + '%';
+            var cls = value < 34 ? 'diff-easy' : value < 67 ? 'diff-medium' : 'diff-hard';
+            label.className = 'slider-value difficulty-label ' + cls;
+        }
+
+        // Set the initial color based on the model value
+        updateDifficulty('@Model.Difficulty');
     </script>
 }
