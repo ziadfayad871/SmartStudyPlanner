@@ -46,7 +46,7 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Availabilities");
+                    b.ToTable("Availabilities", (string)null);
                 });
 
             modelBuilder.Entity("SmartStudyPlanner.Domain.Entities.StudyPlan", b =>
@@ -71,7 +71,7 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("StudyPlans");
+                    b.ToTable("StudyPlans", (string)null);
                 });
 
             modelBuilder.Entity("SmartStudyPlanner.Domain.Entities.StudySession", b =>
@@ -109,7 +109,7 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("StudySessions");
+                    b.ToTable("StudySessions", (string)null);
                 });
 
             modelBuilder.Entity("SmartStudyPlanner.Domain.Entities.Subject", b =>
@@ -125,6 +125,9 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Difficulty")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EstimatedMinutes")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ExamDate")
@@ -144,7 +147,7 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Subjects");
+                    b.ToTable("Subjects", (string)null);
                 });
 
             modelBuilder.Entity("SmartStudyPlanner.Domain.Entities.Task", b =>
@@ -175,7 +178,7 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Tasks", (string)null);
                 });
 
             modelBuilder.Entity("SmartStudyPlanner.Domain.Entities.User", b =>
@@ -192,7 +195,7 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("SmartStudyPlanner.Domain.Entities.Availability", b =>

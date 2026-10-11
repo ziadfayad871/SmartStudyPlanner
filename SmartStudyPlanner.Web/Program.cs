@@ -21,6 +21,7 @@ namespace SmartStudyPlanner.Web
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
             builder.Services.AddScoped<ISubjectService, SubjectService>();
+            builder.Services.AddScoped<IStudyPlanningService, StudyPlanningService>();
 
             var app = builder.Build();
 
