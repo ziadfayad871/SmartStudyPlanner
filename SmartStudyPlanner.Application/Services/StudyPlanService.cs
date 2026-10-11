@@ -32,6 +32,17 @@ namespace SmartStudyPlanner.Application.Services
             {
                 throw new ArgumentNullException(nameof(studyPlan));
             }
+            // Free the plan's sessions first (FK uses NoAction)
+            var sessions = _studySessionRepository.GetByUserId(studyPlan.UserId)
+                .Where(s => s.StudyPlanId == studyPlan.Id)
+                .ToList();
+            foreach (var session in sessions)
+            {
+                session.StudyPlanId = null;
+                _studySessionRepository.Update(session);
+            }
+            _studySessionRepository.SaveChanges();
+
             _studyPlanRepository.Delete(studyPlan);
             _studyPlanRepository.SaveChanges();
         }

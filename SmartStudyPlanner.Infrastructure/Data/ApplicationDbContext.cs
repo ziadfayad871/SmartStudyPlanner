@@ -63,7 +63,7 @@ public DbSet<User> Users { get; set; }
                 .HasOne(ss => ss.StudyPlan)
                 .WithMany(sp => sp.StudySessions)
                 .HasForeignKey(ss => ss.StudyPlanId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
         
         }
     }

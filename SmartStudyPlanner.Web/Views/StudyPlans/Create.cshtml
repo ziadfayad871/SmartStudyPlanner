@@ -1,0 +1,51 @@
+@model SmartStudyPlanner.Domain.Entities.StudyPlan
+
+@{
+    ViewData["Title"] = "New Plan";
+}
+
+<a asp-action="Index" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Plans
+</a>
+
+<div class="card form-card">
+    <h1 class="page-title" style="margin-bottom:24px;">Create Study Plan</h1>
+
+    <form asp-action="Create" method="post">
+        <div class="form-group">
+            <label asp-for="Name">Plan Name <span class="required">*</span></label>
+            <input asp-for="Name" type="text" placeholder="e.g. Midterm Revision Plan" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" placeholder="What is this plan about?"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="StartDate">Start Date <span class="required">*</span></label>
+                <input asp-for="StartDate" type="date" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate">End Date <span class="required">*</span></label>
+                <input asp-for="EndDate" type="date" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-actions">
+            <a asp-action="Index" class="btn-outline-soft">Cancel</a>
+            <button type="submit" class="btn-primary">Create Plan</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

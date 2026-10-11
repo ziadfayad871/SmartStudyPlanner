@@ -1,0 +1,94 @@
+@using SmartStudyPlanner.Domain.Enums
+@using SmartStudyPlanner.Application.DTOs
+@model SmartStudyPlanner.Domain.Entities.StudySession
+
+@{
+    ViewData["Title"] = "Add Session";
+    var subjects = ViewBag.Subjects as List<SubjectDto> ?? new List<SubjectDto>();
+    var plans = ViewBag.Plans as List<SmartStudyPlanner.Domain.Entities.StudyPlan> ?? new List<SmartStudyPlanner.Domain.Entities.StudyPlan>();
+}
+
+<a asp-action="Index" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Sessions
+</a>
+
+<div class="card form-card">
+    <h1 class="page-title" style="margin-bottom:24px;">Add Study Session</h1>
+
+    <form asp-controller="StudySessions" asp-action="Create" method="post">
+        <div class="form-group">
+            <label asp-for="SubjectId">Subject <span class="required">*</span></label>
+            @if (subjects.Any())
+            {
+                <select asp-for="SubjectId">
+                    <option value="">Select a subject</option>
+                    @foreach (var subject in subjects)
+                    {
+                        <option value="@subject.Id">@subject.Name</option>
+                    }
+                </select>
+            }
+            else
+            {
+                <div style="background:#fff1e6; border:1px solid #fed7aa; border-radius:10px; padding:16px; text-align:center;">
+                    <p style="margin:0 0 10px; color:var(--text-muted); font-size:14px;">
+                        You don't have any subjects yet. Add a subject first.
+                    </p>
+                    <a asp-controller="Subjects" asp-action="Create" class="btn-primary" style="padding:8px 16px; font-size:13px;">
+                        <i class="fas fa-plus"></i> Add Subject
+                    </a>
+                </div>
+            }
+            <span asp-validation-for="SubjectId" class="text-danger"></span>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="Date">Date <span class="required">*</span></label>
+                <input asp-for="Date" type="date" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status">Status</label>
+                <select asp-for="Status" asp-items="Html.GetEnumSelectList<SessionStatus>()"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="StartTime">Start Time <span class="required">*</span></label>
+                <input asp-for="StartTime" type="time" />
+                <span asp-validation-for="StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndTime">End Time <span class="required">*</span></label>
+                <input asp-for="EndTime" type="time" />
+                <span asp-validation-for="EndTime" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="StudyPlanId">Study Plan (optional)</label>
+            <select asp-for="StudyPlanId">
+                <option value="">No plan (free session)</option>
+                @foreach (var plan in plans)
+                {
+                    <option value="@plan.Id">@plan.Name</option>
+                }
+            </select>
+            <span asp-validation-for="StudyPlanId" class="text-danger"></span>
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-actions">
+            <a asp-action="Index" class="btn-outline-soft">Cancel</a>
+            <button type="submit" class="btn-primary">Save Session</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

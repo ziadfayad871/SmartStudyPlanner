@@ -12,7 +12,7 @@ using SmartStudyPlanner.Infrastructure.Data;
 namespace SmartStudyPlanner.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20261011222647_MakeStudyPlanIdNullable")]
+    [Migration("20261011224040_MakeStudyPlanIdNullable")]
     partial class MakeStudyPlanIdNullable
     {
         /// <inheritdoc />
@@ -283,7 +283,7 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                     b.HasOne("SmartStudyPlanner.Domain.Entities.StudyPlan", "StudyPlan")
                         .WithMany("StudySessions")
                         .HasForeignKey("StudyPlanId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SmartStudyPlanner.Domain.Entities.Subject", "Subject")
                         .WithMany("StudySessions")

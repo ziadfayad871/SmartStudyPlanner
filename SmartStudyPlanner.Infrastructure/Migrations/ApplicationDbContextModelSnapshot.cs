@@ -280,7 +280,7 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                     b.HasOne("SmartStudyPlanner.Domain.Entities.StudyPlan", "StudyPlan")
                         .WithMany("StudySessions")
                         .HasForeignKey("StudyPlanId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SmartStudyPlanner.Domain.Entities.Subject", "Subject")
                         .WithMany("StudySessions")

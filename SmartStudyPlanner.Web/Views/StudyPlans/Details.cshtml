@@ -1,0 +1,96 @@
+@using SmartStudyPlanner.Domain.Enums
+@model SmartStudyPlanner.Domain.Entities.StudyPlan
+
+@{
+    ViewData["Title"] = Model.Name;
+    var freeSessions = ViewBag.FreeSessions as List<SmartStudyPlanner.Domain.Entities.StudySession> ?? new List<SmartStudyPlanner.Domain.Entities.StudySession>();
+    var sessions = Model.StudySessions?.OrderBy(s => s.Date).ThenBy(s => s.StartTime).ToList()
+        ?? new List<SmartStudyPlanner.Domain.Entities.StudySession>();
+}
+
+<a asp-action="Index" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Plans
+</a>
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">@Model.Name</h1>
+        <p class="page-subtitle">@Model.StartDate.ToString("MMM d, yyyy") - @Model.EndDate.ToString("MMM d, yyyy") &cdot; @sessions.Count session(s)</p>
+    </div>
+    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn-outline-soft">
+        <i class="fas fa-trash"></i> Delete Plan
+    </a>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.Description))
+{
+    <div class="card" style="margin-bottom:20px;">
+        <p style="margin:0; color:var(--text-muted); font-size:14px;">@Model.Description</p>
+    </div>
+}
+
+<div class="card" style="margin-bottom:20px;">
+    <h2 style="font-size:16px; font-weight:700; margin-bottom:16px;">Sessions in this plan</h2>
+    <table class="subjects-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Duration</th>
+                <th>Status</th>
+                <th style="text-align:right;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (sessions.Any())
+            {
+                foreach (var s in sessions)
+                {
+                    <tr>
+                        <td>@s.Date.ToString("MMM d, yyyy")</td>
+                        <td>@s.StartTime.ToString("hh:mm tt") - @s.EndTime.ToString("hh:mm tt")</td>
+                        <td>@((int)s.Duration.TotalHours > 0 ? $"{(int)s.Duration.TotalHours}h {s.Duration.Minutes}m" : $"{s.Duration.Minutes}m")</td>
+                        <td><span class="badge-difficulty status-pending">@s.Status</span></td>
+                        <td style="text-align:right;">
+                            <form asp-action="RemoveSession" method="post" style="display:inline;">
+                                <input type="hidden" name="planId" value="@Model.Id" />
+                                <input type="hidden" name="sessionId" value="@s.Id" />
+                                <button type="submit" class="btn-outline-soft" title="Remove from plan" style="padding:6px 10px; font-size:12px;">
+                                    <i class="fas fa-unlink"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" style="text-align:center; color:var(--text-muted); padding:24px;">
+                        No sessions in this plan yet. Add one below.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (freeSessions.Any())
+{
+    <div class="card form-card">
+        <h2 style="font-size:16px; font-weight:700; margin-bottom:16px;">Add a free session to this plan</h2>
+        <form asp-action="AddSession" method="post" style="display:flex; gap:12px; align-items:flex-end;">
+            <input type="hidden" name="planId" value="@Model.Id" />
+            <div class="form-group" style="flex:1; margin:0;">
+                <label for="sessionId">Session</label>
+                <select name="sessionId" id="sessionId">
+                    @foreach (var s in freeSessions)
+                    {
+                        <option value="@s.Id">@s.Date.ToString("MMM d") — @s.StartTime.ToString("hh:mm tt") (@((int)s.Duration.TotalMinutes) min)</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn-primary">Add</button>
+        </form>
+    </div>
+}

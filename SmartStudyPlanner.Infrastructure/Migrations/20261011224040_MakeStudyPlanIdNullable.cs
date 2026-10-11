@@ -10,10 +10,6 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_StudySessions_StudyPlans_StudyPlanId",
-                table: "StudySessions");
-
             migrationBuilder.AlterColumn<int>(
                 name: "StudyPlanId",
                 table: "StudySessions",
@@ -28,23 +24,11 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                 type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_StudySessions_StudyPlans_StudyPlanId",
-                table: "StudySessions",
-                column: "StudyPlanId",
-                principalTable: "StudyPlans",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.SetNull);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_StudySessions_StudyPlans_StudyPlanId",
-                table: "StudySessions");
-
             migrationBuilder.DropColumn(
                 name: "Description",
                 table: "StudyPlans");
@@ -58,13 +42,6 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                 oldClrType: typeof(int),
                 oldType: "int",
                 oldNullable: true);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_StudySessions_StudyPlans_StudyPlanId",
-                table: "StudySessions",
-                column: "StudyPlanId",
-                principalTable: "StudyPlans",
-                principalColumn: "Id");
         }
     }
 }

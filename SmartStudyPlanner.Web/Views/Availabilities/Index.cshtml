@@ -1,0 +1,61 @@
+@model IEnumerable<SmartStudyPlanner.Domain.Entities.Availability>
+
+@{
+    ViewData["Title"] = "My Availability";
+}
+
+<a asp-controller="StudySessions" asp-action="Index" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Sessions
+</a>
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">My Availability</h1>
+        <p class="page-subtitle">Tell us when you're free to study each week.</p>
+    </div>
+    <a asp-action="Create" class="btn-primary">
+        <i class="fas fa-plus"></i> Add Availability
+    </a>
+</div>
+
+<div class="card">
+    <table class="subjects-table">
+        <thead>
+            <tr>
+                <th>Day</th>
+                <th>Available From</th>
+                <th>Available To</th>
+                <th style="text-align:right;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var a in Model)
+                {
+                    <tr>
+                        <td style="font-weight:600;">@a.DayOfWeek</td>
+                        <td>@a.AvailableFrom.ToString("hh:mm tt")</td>
+                        <td>@a.AvailableTo.ToString("hh:mm tt")</td>
+                        <td style="text-align:right; white-space:nowrap;">
+                            <a asp-action="Edit" asp-route-id="@a.Id" class="btn-outline-soft" title="Edit" style="padding:6px 10px; font-size:12px;">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@a.Id" class="btn-outline-soft" title="Delete" style="padding:6px 10px; font-size:12px;">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" style="text-align:center; color:var(--text-muted); padding:28px;">
+                        No availability set. <a asp-action="Create" style="color:var(--primary); font-weight:600;">Add your free hours</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

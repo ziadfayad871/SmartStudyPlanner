@@ -35,8 +35,17 @@
                    asp-controller="Subjects" asp-action="Index">
                     <i class="fas fa-book"></i> My Subjects
                 </a>
-                <a class="nav-link disabled-link" title="Coming soon">
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "StudyPlans" ? "active" : "")"
+                   asp-controller="StudyPlans" asp-action="Index">
                     <i class="fas fa-calendar-check"></i> Study Plan
+                </a>
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "StudySessions" ? "active" : "")"
+                   asp-controller="StudySessions" asp-action="Index">
+                    <i class="fas fa-clock"></i> Sessions
+                </a>
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Availabilities" ? "active" : "")"
+                   asp-controller="Availabilities" asp-action="Index">
+                    <i class="fas fa-calendar-day"></i> Availability
                 </a>
                 <a class="nav-link disabled-link" title="Coming soon">
                     <i class="fas fa-calendar"></i> Calendar

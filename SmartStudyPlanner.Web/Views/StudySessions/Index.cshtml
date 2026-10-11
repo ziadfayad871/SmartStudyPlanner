@@ -1,0 +1,107 @@
+@using SmartStudyPlanner.Domain.Enums
+@model IEnumerable<SmartStudyPlanner.Domain.Entities.StudySession>
+
+@{
+    ViewData["Title"] = "Study Sessions";
+    var filter = ViewBag.Filter as string ?? "all";
+    var subjects = ViewBag.Subjects as Dictionary<int, string> ?? new Dictionary<int, string>();
+    string SubjectName(int id) => subjects.TryGetValue(id, out var n) ? n : "—";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Study Sessions</h1>
+        <p class="page-subtitle">Your scheduled study time, all in one place.</p>
+    </div>
+    <div style="display:flex; gap:10px;">
+        <a asp-controller="Availabilities" asp-action="Index" class="btn-outline-soft">
+            <i class="fas fa-calendar-day"></i> My Availability
+        </a>
+        <a asp-controller="StudySessions" asp-action="Create" class="btn-primary">
+            <i class="fas fa-plus"></i> Add Session
+        </a>
+    </div>
+</div>
+
+<div class="task-tabs">
+    <a class="task-tab @(filter == "all" ? "active" : "")" asp-action="Index" asp-route-filter="all">
+        All <span class="tab-count">@ViewBag.AllCount</span>
+    </a>
+    <a class="task-tab @(filter == "today" ? "active" : "")" asp-action="Index" asp-route-filter="today">
+        Today <span class="tab-count">@ViewBag.TodayCount</span>
+    </a>
+    <a class="task-tab @(filter == "upcoming" ? "active" : "")" asp-action="Index" asp-route-filter="upcoming">
+        Upcoming
+    </a>
+    <a class="task-tab @(filter == "completed" ? "active" : "")" asp-action="Index" asp-route-filter="completed">
+        Completed <span class="tab-count">@ViewBag.CompletedCount</span>
+    </a>
+</div>
+
+<div class="card">
+    <table class="subjects-table">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Duration</th>
+                <th>Status</th>
+                <th style="text-align:right;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var s in Model)
+                {
+                    var statusClass = s.Status switch
+                    {
+                        SessionStatus.Completed => "status-completed",
+                        SessionStatus.Missed => "badge-hard",
+                        SessionStatus.Cancelled => "status-pending",
+                        _ => "status-pending"
+                    };
+                    var dateText = s.Date.Date switch
+                    {
+                        var d when d < DateTime.Today => s.Date.ToString("MMM d"),
+                        var d when d == DateTime.Today => "Today",
+                        var d when d == DateTime.Today.AddDays(1) => "Tomorrow",
+                        _ => s.Date.ToString("MMM d")
+                    };
+                    <tr>
+                        <td style="font-weight:600;">@SubjectName(s.SubjectId)</td>
+                        <td>@dateText</td>
+                        <td>@s.StartTime.ToString("hh:mm tt") - @s.EndTime.ToString("hh:mm tt")</td>
+                        <td>@((int)s.Duration.TotalHours > 0 ? $"{(int)s.Duration.TotalHours}h {s.Duration.Minutes}m" : $"{s.Duration.Minutes}m")</td>
+                        <td><span class="badge-difficulty @statusClass">@s.Status</span></td>
+                        <td style="text-align:right; white-space:nowrap;">
+                            @if (s.Status != SessionStatus.Completed)
+                            {
+                                <form asp-action="MarkComplete" asp-route-id="@s.Id" method="post" style="display:inline;">
+                                    <button type="submit" class="btn-outline-soft" title="Mark completed" style="padding:6px 10px; font-size:12px;">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </form>
+                            }
+                            <a asp-action="Edit" asp-route-id="@s.Id" class="btn-outline-soft" title="Edit" style="padding:6px 10px; font-size:12px;">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@s.Id" class="btn-outline-soft" title="Delete" style="padding:6px 10px; font-size:12px;">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" style="text-align:center; color:var(--text-muted); padding:28px;">
+                        No sessions found. <a asp-action="Create" style="color:var(--primary); font-weight:600;">Add your first session</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
