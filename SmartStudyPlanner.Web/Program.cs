@@ -23,6 +23,8 @@ namespace SmartStudyPlanner.Web
             builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
             builder.Services.AddScoped<ISubjectService, SubjectService>();
             builder.Services.AddScoped<IStudyPlanningService, StudyPlanningService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             var app = builder.Build();
 
@@ -63,7 +65,14 @@ namespace SmartStudyPlanner.Web
                 return;
             }
 
-            var user = new User { Name = "Ziad Youssef" };
+            var user = new User
+            {
+                Name = "Ziad Youssef",
+                Email = "ziad@example.com",
+                PasswordHash = UserService.HashPassword("Password123!"),
+                AcademicLevel = "3rd Year",
+                ProfilePictureUrl = ""
+            };
             db.Users.Add(user);
             db.SaveChanges();
 

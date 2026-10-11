@@ -48,6 +48,10 @@ public DbSet<User> Users { get; set; }
                 .HasMany(s => s.StudySessions)
                 .WithOne(ss => ss.Subject)
                 .HasForeignKey(ss => ss.SubjectId);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
         }
     }
 }
