@@ -9,12 +9,10 @@ namespace SmartStudyPlanner.Web.Controllers
     public class SettingsController : Controller
     {
         private readonly IUserService _userService;
-        private readonly IWebHostEnvironment _env;
 
-        public SettingsController(IUserService userService, IWebHostEnvironment env)
+        public SettingsController(IUserService userService)
         {
             _userService = userService;
-            _env = env;
         }
 
         private int GetCurrentUserId()
@@ -59,25 +57,39 @@ namespace SmartStudyPlanner.Web.Controllers
 
             if (photo != null && photo.Length > 0)
             {
-                var uploadsDir = Path.Combine(_env.WebRootPath, "uploads");
-                Directory.CreateDirectory(uploadsDir);
-                var fileName = $"user{user.Id}_{Guid.NewGuid():N}{Path.GetExtension(photo.FileName)}";
-                var filePath = Path.Combine(uploadsDir, fileName);
-                using (var stream = System.IO.File.Create(filePath))
+                if (!photo.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
                 {
-                    await photo.CopyToAsync(stream);
+                    ModelState.AddModelError(string.Empty, "Please upload an image file.");
+                    return View(user);
                 }
-                user.ProfilePictureUrl = "/uploads/" + fileName;
-            }
-            else
-            {
-                user.ProfilePictureUrl = profilePictureUrl ?? string.Empty;
+                if (photo.Length > 2 * 1024 * 1024)
+                {
+                    ModelState.AddModelError(string.Empty, "Image must be smaller than 2 MB.");
+                    return View(user);
+                }
+                using (var ms = new MemoryStream())
+                {
+                    await photo.CopyToAsync(ms);
+                    user.ProfilePicture = ms.ToArray();
+                    user.ProfilePictureContentType = photo.ContentType;
+                }
+                user.ProfilePictureUrl = string.Empty;
             }
 
             await _userService.Update(user);
             TempData["Success"] = "Profile updated successfully.";
 
             return View(user);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Photo()
+        {
+            var user = await _userService.GetUserById(GetCurrentUserId());
+            if (user?.ProfilePicture == null || user.ProfilePicture.Length == 0)
+                return NotFound();
+
+            return File(user.ProfilePicture, user.ProfilePictureContentType ?? "image/jpeg");
         }
     }
 }

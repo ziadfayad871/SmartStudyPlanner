@@ -45,13 +45,10 @@
 
             <div class="profile-header">
                 <div class="avatar" id="avatarPreview">
-                    @if (!string.IsNullOrEmpty(Model?.ProfilePictureUrl))
+                    <span id="avatarInitial">@(Model?.Name?.Substring(0, 1).ToUpper() ?? "?")</span>
+                    @if (Model?.ProfilePicture != null && Model.ProfilePicture.Length > 0)
                     {
-                        <img src="@Model.ProfilePictureUrl" alt="Profile" id="avatarImg" />
-                    }
-                    else
-                    {
-                        <span id="avatarInitial">@(Model?.Name?.Substring(0, 1).ToUpper() ?? "?")</span>
+                        <img src="@Url.Action("Photo", "Settings")" alt="Profile" id="avatarImg" onerror="this.remove()" />
                     }
                 </div>
                 <input type="file" id="photoInput" name="photo" accept="image/*" style="display:none;" />
@@ -98,7 +95,9 @@
             var reader = new FileReader();
             reader.onload = function (ev) {
                 var container = document.getElementById('avatarPreview');
-                container.innerHTML = '<img src="' + ev.target.result + '" alt="Profile" id="avatarImg" />';
+                var initial = container.textContent.trim().charAt(0) || '?';
+                container.innerHTML = '<span id="avatarInitial">' + initial + '</span>'
+                    + '<img src="' + ev.target.result + '" alt="Profile" id="avatarImg" />';
             };
             reader.readAsDataURL(file);
         });

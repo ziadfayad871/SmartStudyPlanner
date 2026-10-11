@@ -7,6 +7,14 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('ssp-theme');
+                if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+            } catch (e) { }
+        })();
+    </script>
 </head>
 <body>
     <div class="app-layout">
@@ -53,6 +61,7 @@
                         <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
                             <div class="avatar" style="width:34px; height:34px; font-size:14px; flex-shrink:0;">
                                 <span>@(User.Identity.Name?.Substring(0, 1).ToUpper() ?? "?")</span>
+                                <img src="@Url.Action("Photo", "Settings")" alt="" onerror="this.remove()" />
                             </div>
                             <div style="flex:1; min-width:0;">
                                 <div style="color:#fff; font-weight:600; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
@@ -76,6 +85,40 @@
         </aside>
 
         <main class="main-content">
+            <header class="topbar">
+                <button type="button" id="sidebarToggle" class="icon-btn" title="Toggle sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="topbar-actions">
+                    <button type="button" id="themeToggle" class="icon-btn" title="Toggle dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <div class="profile-menu" id="profileMenu">
+                            <button type="button" class="profile-btn" id="profileBtn">
+                                <span class="mini-avatar">@(User.Identity.Name?.Substring(0, 1).ToUpper() ?? "?")<img src="@Url.Action("Photo", "Settings")" alt="" onerror="this.remove()" /></span>
+                                <span class="profile-name">@User.Identity.Name</span>
+                                <i class="fas fa-chevron-down chevron"></i>
+                            </button>
+                            <div class="profile-dropdown">
+                                <div class="pd-header">
+                                    <div class="pd-name">@User.Identity.Name</div>
+                                </div>
+                                <a class="profile-item" asp-controller="Settings" asp-action="Index">
+                                    <i class="fas fa-user-cog"></i> Profile Settings
+                                </a>
+                                <form asp-controller="Account" asp-action="Logout" method="post" style="margin:0;">
+                                    <button type="submit" class="profile-item">
+                                        <i class="fas fa-sign-out-alt"></i> Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </header>
+
             @RenderBody()
         </main>
     </div>
@@ -83,6 +126,54 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        (function () {
+            var layout = document.querySelector('.app-layout');
+
+            try {
+                if (localStorage.getItem('ssp-sidebar') === 'collapsed') layout.classList.add('sidebar-collapsed');
+            } catch (e) { }
+
+            var toggle = document.getElementById('sidebarToggle');
+            if (toggle) toggle.addEventListener('click', function () {
+                if (window.innerWidth < 993) {
+                    layout.classList.toggle('sidebar-open');
+                } else {
+                    var collapsed = layout.classList.toggle('sidebar-collapsed');
+                    try { localStorage.setItem('ssp-sidebar', collapsed ? 'collapsed' : ''); } catch (e) { }
+                }
+            });
+
+            var themeBtn = document.getElementById('themeToggle');
+            function paintThemeIcon() {
+                var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+                var icon = themeBtn.querySelector('i');
+                if (icon) icon.className = dark ? 'fas fa-sun' : 'fas fa-moon';
+            }
+            if (themeBtn) {
+                paintThemeIcon();
+                themeBtn.addEventListener('click', function () {
+                    var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+                    if (dark) document.documentElement.removeAttribute('data-theme');
+                    else document.documentElement.setAttribute('data-theme', 'dark');
+                    try { localStorage.setItem('ssp-theme', dark ? 'light' : 'dark'); } catch (e) { }
+                    paintThemeIcon();
+                });
+            }
+
+            var menu = document.getElementById('profileMenu');
+            var menuBtn = document.getElementById('profileBtn');
+            if (menu && menuBtn) {
+                menuBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    menu.classList.toggle('open');
+                });
+                document.addEventListener('click', function (e) {
+                    if (!menu.contains(e.target)) menu.classList.remove('open');
+                });
+            }
+        })();
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -19,6 +19,10 @@ namespace SmartStudyPlanner.Domain.Entities
 
         public string ProfilePictureUrl { get; set; } = string.Empty;
 
+        public byte[]? ProfilePicture { get; set; }
+
+        public string? ProfilePictureContentType { get; set; }
+
         public ICollection<StudyPlan> StudyPlans { get; set; } = new List<StudyPlan>();
         public ICollection<StudySession> StudySessions { get; set; } = new List<StudySession>();
         public ICollection<Subject> Subjects { get; set; } = new List<Subject>();
