@@ -1,0 +1,132 @@
+@using SmartStudyPlanner.Domain.Enums
+@using TaskStatus = SmartStudyPlanner.Domain.Enums.TaskStatus
+@using Priority = SmartStudyPlanner.Domain.Enums.Priority
+@model IEnumerable<SmartStudyPlanner.Domain.Entities.Task>
+
+@{
+    ViewData["Title"] = "Tasks";
+    var filter = ViewBag.Filter as string ?? "all";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Tasks</h1>
+        <p class="page-subtitle">Manage your tasks and never miss anything.</p>
+    </div>
+    <a asp-controller="Tasks" asp-action="Create" class="btn-primary">
+        <i class="fas fa-plus"></i> Add Task
+    </a>
+</div>
+
+<div class="task-tabs">
+    <a class="task-tab @(filter == "all" ? "active" : "")" asp-action="Index" asp-route-filter="all">
+        All <span class="tab-count">@ViewBag.AllCount</span>
+    </a>
+    <a class="task-tab @(filter == "today" ? "active" : "")" asp-action="Index" asp-route-filter="today">
+        Today <span class="tab-count">@ViewBag.TodayCount</span>
+    </a>
+    <a class="task-tab @(filter == "completed" ? "active" : "")" asp-action="Index" asp-route-filter="completed">
+        Completed <span class="tab-count">@ViewBag.CompletedCount</span>
+    </a>
+</div>
+
+<div class="card">
+    <table class="subjects-table" id="tasksTable">
+        <thead>
+            <tr>
+                <th style="width:40px;"></th>
+                <th>Task</th>
+                <th>Subject</th>
+                <th>Priority</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th style="text-align:right;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var task in Model)
+                {
+                    var dueText = task.DueDate.Date switch
+                    {
+                        var d when d < DateTime.Today => $"Overdue {Math.Abs((DateTime.Today - d).Days)}d",
+                        var d when d == DateTime.Today => "Today",
+                        var d when d == DateTime.Today.AddDays(1) => "Tomorrow",
+                        _ => task.DueDate.ToString("MMM d")
+                    };
+                    var dueClass = task.DueDate.Date < DateTime.Today && task.Status != TaskStatus.Completed
+                        ? "text-danger fw-bold"
+                        : task.DueDate.Date == DateTime.Today && task.Status != TaskStatus.Completed
+                            ? "fw-bold" : "";
+                    var priorityClass = task.Priority switch
+                    {
+                        Priority.High => "priority-high",
+                        Priority.Medium => "priority-medium",
+                        _ => "priority-low"
+                    };
+                    var statusClass = task.Status switch
+                    {
+                        TaskStatus.InProgress => "status-inprogress",
+                        TaskStatus.Completed => "status-completed",
+                        _ => "status-pending"
+                    };
+                    <tr>
+                        <td>
+                            @if (task.Status == TaskStatus.Completed)
+                            {
+                                <input type="checkbox" checked disabled class="task-check" />
+                            }
+                            else
+                            {
+                                <form asp-controller="Tasks" asp-action="ChangeStatus" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@task.Id" />
+                                    <button type="submit" class="task-check-btn" title="Mark next status">
+                                        <i class="fas fa-square"></i>
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                        <td class="@(task.Status == TaskStatus.Completed ? "text-muted text-decoration-line-through" : "")">
+                            @task.Title
+                        </td>
+                        <td>
+                            <div class="subject-cell" style="font-weight:500;">
+                                <div class="subject-icon" style="background:@(task.Subject?.Color ?? "#94a3b8"); width:28px; height:28px; font-size:12px;">
+                                    @(task.Subject?.Name?.Substring(0, 1).ToUpper() ?? "?")
+                                </div>
+                                @(task.Subject?.Name ?? "—")
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge-difficulty @priorityClass">@task.Priority</span>
+                        </td>
+                        <td class="@dueClass">@dueText</td>
+                        <td>
+                            <span class="badge-difficulty @statusClass">@task.Status</span>
+                        </td>
+                        <td style="text-align:right; white-space:nowrap;">
+                            <a asp-controller="Tasks" asp-action="Edit" asp-route-id="@task.Id" class="action-btn" title="Edit">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <a asp-controller="Tasks" asp-action="Delete" asp-route-id="@task.Id" class="action-btn delete" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-state">
+                            <i class="fas fa-tasks"></i>
+                            <p>No tasks found. Add your first task to get started!</p>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

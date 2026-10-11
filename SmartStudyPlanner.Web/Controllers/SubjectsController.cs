@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SmartStudyPlanner.Application.DTOs;
 using SmartStudyPlanner.Application.Interfaces;
 using SmartStudyPlanner.Application.Services;
@@ -6,6 +7,7 @@ using SmartStudyPlanner.Domain.Entities;
 
 namespace SmartStudyPlanner.Web.Controllers
 {
+    [Authorize]
     public class SubjectsController : Controller
     {
         private readonly IRepository<User> _userRepository;

@@ -60,7 +60,7 @@ namespace SmartStudyPlanner.Application.Services
         public IEnumerable<SubjectDto> GetSubjectsByUserId(int userId)
         {
             if (userId <= 0)
-                throw new ArgumentException("User ID must be positive.");
+                return Enumerable.Empty<SubjectDto>();
 
             var subjects = _subjectRepository.GetByUserId(userId);
 

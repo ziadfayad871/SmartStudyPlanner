@@ -33,20 +33,45 @@
                 <a class="nav-link disabled-link" title="Coming soon">
                     <i class="fas fa-calendar"></i> Calendar
                 </a>
-                <a class="nav-link disabled-link" title="Coming soon">
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Tasks" ? "active" : "")"
+                   asp-controller="Tasks" asp-action="Index">
                     <i class="fas fa-tasks"></i> Tasks
                 </a>
                 <a class="nav-link disabled-link" title="Coming soon">
                     <i class="fas fa-chart-bar"></i> Statistics
                 </a>
-                <a class="nav-link disabled-link" title="Coming soon">
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Settings" ? "active" : "")"
+                   asp-controller="Settings" asp-action="Index">
                     <i class="fas fa-cog"></i> Settings
                 </a>
             </nav>
 
             <div class="sidebar-footer">
-                <i class="fas fa-check-circle"></i>
-                <p>Small steps,<br />every day<br />lead to big results.</p>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div style="width:100%;">
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                            <div class="avatar" style="width:34px; height:34px; font-size:14px; flex-shrink:0;">
+                                <span>@(User.Identity.Name?.Substring(0, 1).ToUpper() ?? "?")</span>
+                            </div>
+                            <div style="flex:1; min-width:0;">
+                                <div style="color:#fff; font-weight:600; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                    @User.Identity.Name
+                                </div>
+                            </div>
+                        </div>
+                        <form asp-controller="Account" asp-action="Logout" method="post" style="margin:0;">
+                            <button type="submit" style="background:none; border:none; color:var(--sidebar-text); font-size:12.5px; cursor:pointer; padding:0; display:flex; align-items:center; gap:8px;">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <i class="fas fa-check-circle"></i>
+                    <p>Small steps,<br />every day<br />lead to big results.</p>
+                }
             </div>
         </aside>
 

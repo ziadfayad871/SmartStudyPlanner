@@ -1,0 +1,81 @@
+@using SmartStudyPlanner.Domain.Entities
+@using SmartStudyPlanner.Domain.Enums
+@using SmartStudyPlanner.Application.DTOs
+@model SmartStudyPlanner.Domain.Entities.Task
+
+@{
+    ViewData["Title"] = "Add Task";
+    var subjects = ViewBag.Subjects as List<SubjectDto> ?? new List<SubjectDto>();
+}
+
+<a asp-controller="Tasks" asp-action="Index" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Tasks
+</a>
+
+<div class="card form-card">
+    <h1 class="page-title" style="margin-bottom:24px;">Add New Task</h1>
+
+    <form asp-controller="Tasks" asp-action="Create" method="post">
+        <div class="form-group">
+            <label asp-for="Title">Task Title <span class="required">*</span></label>
+            <input asp-for="Title" type="text" placeholder="e.g. Finish C# LINQ exercises" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="SubjectId">Subject <span class="required">*</span></label>
+            @if (subjects.Any())
+            {
+                <select asp-for="SubjectId">
+                    <option value="">Select a subject</option>
+                    @foreach (var subject in subjects)
+                    {
+                        <option value="@subject.Id">@subject.Name</option>
+                    }
+                </select>
+            }
+            else
+            {
+                <div style="background:#fff1e6; border:1px solid #fed7aa; border-radius:10px; padding:16px; text-align:center;">
+                    <p style="margin:0 0 10px; color:var(--text-muted); font-size:14px;">
+                        You don't have any subjects yet. Add a subject first to create tasks for it.
+                    </p>
+                    <a asp-controller="Subjects" asp-action="Create" class="btn-primary" style="padding:8px 16px; font-size:13px;">
+                        <i class="fas fa-plus"></i> Add Subject
+                    </a>
+                </div>
+            }
+            <span asp-validation-for="SubjectId" class="text-danger"></span>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="Priority">Priority <span class="required">*</span></label>
+                <select asp-for="Priority" asp-items="Html.GetEnumSelectList<Priority>()">
+                </select>
+                <span asp-validation-for="Priority" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DueDate">Due Date <span class="required">*</span></label>
+                <input asp-for="DueDate" type="date" />
+                <span asp-validation-for="DueDate" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="EstimatedMinutes">Estimated Minutes</label>
+            <input asp-for="EstimatedMinutes" type="number" min="0" placeholder="e.g. 60" />
+            <span asp-validation-for="EstimatedMinutes" class="text-danger"></span>
+        </div>
+
+        <div class="form-actions">
+            <a asp-controller="Tasks" asp-action="Index" class="btn-outline-soft">Cancel</a>
+            <button type="submit" class="btn-primary">Save Task</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
