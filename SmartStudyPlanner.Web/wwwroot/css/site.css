@@ -416,6 +416,8 @@ html, body {
 }
 
 .form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
 .form-group input[type="date"],
 .form-group input[type="number"],
 .form-group select,
@@ -629,138 +631,84 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 /* ===== Auth pages ===== */
-.auth-split-body {
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
     background: var(--page-bg);
-    margin: 0;
-    min-height: 100vh;
+    font-family: "Poppins", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
 }
 
-.auth-split {
-    display: flex;
-    min-height: 100vh;
-}
-
-.auth-illustration {
-    flex: 1;
-    background: linear-gradient(135deg, #2b1d14 0%, #4a3423 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-    position: relative;
-    overflow: hidden;
-}
-
-.auth-illustration::before {
-    content: '';
-    position: absolute;
-    top: -60px;
-    right: -60px;
-    width: 260px;
-    height: 260px;
-    background: rgba(249, 115, 22, 0.12);
-    border-radius: 50%;
-}
-
-.auth-illustration::after {
-    content: '';
-    position: absolute;
-    bottom: -40px;
-    left: -40px;
-    width: 180px;
-    height: 180px;
-    background: rgba(249, 115, 22, 0.08);
-    border-radius: 50%;
-}
-
-.auth-illu-content {
-    position: relative;
-    z-index: 1;
-    max-width: 380px;
-    color: #fff;
-}
-
-.auth-illu-icon {
-    width: 64px;
-    height: 64px;
-    background: var(--primary);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    margin-bottom: 24px;
-}
-
-.auth-illu-content h2 {
-    font-size: 32px;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 14px;
-}
-
-.auth-illu-content > p {
-    font-size: 15px;
-    color: rgba(255, 255, 255, 0.65);
-    line-height: 1.6;
-    margin-bottom: 32px;
-}
-
-.auth-illu-quote {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.75);
-    line-height: 1.5;
-}
-
-.auth-illu-quote i {
-    color: var(--primary);
-    margin-top: 3px;
-}
-
-.auth-form-panel {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-}
-
-.auth-form-wrapper {
+.auth-card {
     width: 100%;
-    max-width: 400px;
+    max-width: 410px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    box-shadow: 0 6px 28px rgba(43, 29, 20, 0.07);
+    padding: 36px 34px;
+}
+
+.auth-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 26px;
+}
+
+.auth-brand-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 17px;
+    flex-shrink: 0;
+}
+
+.auth-brand-text {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-dark);
 }
 
 .auth-title {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     color: var(--text-dark);
-    margin-bottom: 6px;
+    margin-bottom: 5px;
 }
 
 .auth-subtitle {
-    font-size: 15px;
+    font-size: 14px;
     color: var(--text-muted);
-    margin-bottom: 30px;
+    margin-bottom: 26px;
 }
 
 .auth-options {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin: -6px 0 20px;
 }
 
 .auth-checkbox {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
+    font-size: 13.5px;
     color: var(--text-muted);
     cursor: pointer;
     margin: 0;
+}
+
+.auth-checkbox input {
+    accent-color: var(--primary);
 }
 
 .auth-btn {
@@ -772,8 +720,8 @@ input[type="range"]::-webkit-slider-thumb {
 
 .auth-footer {
     text-align: center;
-    margin-top: 24px;
-    font-size: 14px;
+    margin-top: 22px;
+    font-size: 13.5px;
     color: var(--text-muted);
 }
 
@@ -787,13 +735,9 @@ input[type="range"]::-webkit-slider-thumb {
     text-decoration: underline;
 }
 
-@media (max-width: 768px) {
-    .auth-illustration {
-        display: none;
-    }
-
-    .auth-form-panel {
-        padding: 24px;
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 28px 22px;
     }
 }
 

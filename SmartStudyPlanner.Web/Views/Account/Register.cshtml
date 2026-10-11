@@ -11,83 +11,69 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register - Smart Study Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body class="auth-split-body">
+<body class="auth-page">
 
-    <div class="auth-split">
-        <!-- Left illustration panel -->
-        <div class="auth-illustration">
-            <div class="auth-illu-content">
-                <div class="auth-illu-icon">
-                    <i class="fas fa-book-open"></i>
-                </div>
-                <h2>Smart Study<br />Planner</h2>
-                <p>Organize your studies, track your progress, and achieve your goals.</p>
-                <div class="auth-illu-quote">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Small steps, every day<br />lead to big results.</span>
-                </div>
-            </div>
+    <div class="auth-card">
+        <div class="auth-brand">
+            <div class="auth-brand-icon"><i class="fas fa-book-open"></i></div>
+            <span class="auth-brand-text">Smart Study Planner</span>
         </div>
 
-        <!-- Right form panel -->
-        <div class="auth-form-panel">
-            <div class="auth-form-wrapper">
-                <h1 class="auth-title">Create Your Account</h1>
-                <p class="auth-subtitle">Start planning your studies today.</p>
+        <h1 class="auth-title">Create Your Account</h1>
+        <p class="auth-subtitle">Start planning your studies today.</p>
 
-                <form asp-controller="Account" asp-action="Register" method="post">
-                    <div class="form-group">
-                        <label asp-for="FullName">Full Name</label>
-                        <input asp-for="FullName" type="text" placeholder="Ziad Youssef" />
-                        <span asp-validation-for="FullName" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="Email">Email</label>
-                        <input asp-for="Email" type="email" placeholder="you@example.com" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="AcademicYear">Academic Year</label>
-                        <select asp-for="AcademicYear">
-                            <option value="">Select your year</option>
-                            <option value="1st Year">1st Year</option>
-                            <option value="2nd Year">2nd Year</option>
-                            <option value="3rd Year">3rd Year</option>
-                            <option value="4th Year">4th Year</option>
-                            <option value="Graduate">Graduate</option>
-                        </select>
-                        <span asp-validation-for="AcademicYear" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label asp-for="Password">Password</label>
-                            <input asp-for="Password" type="password" placeholder="At least 6 characters" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label asp-for="ConfirmPassword">Confirm Password</label>
-                            <input asp-for="ConfirmPassword" type="password" placeholder="Re-enter password" />
-                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                    <button type="submit" class="btn-primary auth-btn">Register</button>
-                </form>
-
-                <p class="auth-footer">
-                    Already have an account? <a asp-controller="Account" asp-action="Login">Login</a>
-                </p>
+        <form asp-controller="Account" asp-action="Register" method="post">
+            <div class="form-group">
+                <label asp-for="FullName">Full Name</label>
+                <input asp-for="FullName" type="text" placeholder="Ziad Youssef" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
             </div>
-        </div>
+
+            <div class="form-group">
+                <label asp-for="Email">Email</label>
+                <input asp-for="Email" type="email" placeholder="you@example.com" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AcademicYear">Academic Year</label>
+                <select asp-for="AcademicYear">
+                    <option value="">Select your year</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                    <option value="Graduate">Graduate</option>
+                </select>
+                <span asp-validation-for="AcademicYear" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password">Password</label>
+                <input asp-for="Password" type="password" placeholder="At least 6 characters" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ConfirmPassword">Confirm Password</label>
+                <input asp-for="ConfirmPassword" type="password" placeholder="Re-enter your password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <button type="submit" class="btn-primary auth-btn">Register</button>
+        </form>
+
+        <p class="auth-footer">
+            Already have an account? <a asp-controller="Account" asp-action="Login">Login</a>
+        </p>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
