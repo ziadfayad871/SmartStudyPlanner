@@ -60,9 +60,19 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -97,6 +107,9 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<int?>("StudyPlanId")
+                        .HasColumnType("int");
+
                     b.Property<int>("SubjectId")
                         .HasColumnType("int");
 
@@ -104,6 +117,8 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StudyPlanId");
 
                     b.HasIndex("SubjectId");
 
@@ -262,6 +277,11 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartStudyPlanner.Domain.Entities.StudySession", b =>
                 {
+                    b.HasOne("SmartStudyPlanner.Domain.Entities.StudyPlan", "StudyPlan")
+                        .WithMany("StudySessions")
+                        .HasForeignKey("StudyPlanId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("SmartStudyPlanner.Domain.Entities.Subject", "Subject")
                         .WithMany("StudySessions")
                         .HasForeignKey("SubjectId")
@@ -273,6 +293,8 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("StudyPlan");
 
                     b.Navigation("Subject");
 
@@ -307,6 +329,11 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                     b.Navigation("Subject");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SmartStudyPlanner.Domain.Entities.StudyPlan", b =>
+                {
+                    b.Navigation("StudySessions");
                 });
 
             modelBuilder.Entity("SmartStudyPlanner.Domain.Entities.Subject", b =>

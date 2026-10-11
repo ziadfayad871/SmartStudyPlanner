@@ -31,5 +31,8 @@ namespace SmartStudyPlanner.Domain.Entities
         public TimeOnly EndTime { get; set; }
         public TimeSpan Duration { get; set; } 
         public SessionStatus Status { get; set; }
+        public int? StudyPlanId { get; set; }
+        public StudyPlan? StudyPlan { get; set; }
+
     }
 }

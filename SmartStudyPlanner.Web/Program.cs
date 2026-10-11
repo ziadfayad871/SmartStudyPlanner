@@ -42,7 +42,9 @@ namespace SmartStudyPlanner.Web
             builder.Services.AddScoped<IStudySessionService, StudySessionService>();
             builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
             builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
-            
+            builder.Services.AddScoped<IStudyPlanRepository, StudyPlanRepository>();
+            builder.Services.AddScoped<IStudyPlanService, StudyPlanService>();
+
 
             var app = builder.Build();
 

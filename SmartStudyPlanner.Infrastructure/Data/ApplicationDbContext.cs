@@ -58,6 +58,13 @@ public DbSet<User> Users { get; set; }
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
+            
+            modelBuilder.Entity<StudySession>()
+                .HasOne(ss => ss.StudyPlan)
+                .WithMany(sp => sp.StudySessions)
+                .HasForeignKey(ss => ss.StudyPlanId)
+                .OnDelete(DeleteBehavior.SetNull);
+        
         }
     }
 }
