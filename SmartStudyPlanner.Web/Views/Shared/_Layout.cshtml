@@ -17,7 +17,8 @@
     <script>
         (function () {
             try {
-                var t = localStorage.getItem('ssp-theme');
+                var m = document.cookie.match(/(?:^|; )ssp-theme=(light|dark)/);
+                var t = m ? m[1] : localStorage.getItem('ssp-theme');
                 if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
             } catch (e) { }
         })();
@@ -207,7 +208,10 @@
                     var dark = document.documentElement.getAttribute('data-theme') === 'dark';
                     if (dark) document.documentElement.removeAttribute('data-theme');
                     else document.documentElement.setAttribute('data-theme', 'dark');
-                    try { localStorage.setItem('ssp-theme', dark ? 'light' : 'dark'); } catch (e) { }
+                    try {
+                        localStorage.setItem('ssp-theme', dark ? 'light' : 'dark');
+                        document.cookie = 'ssp-theme=' + (dark ? 'light' : 'dark') + ';path=/;max-age=31536000';
+                    } catch (e) { }
                     paintThemeIcon();
                 });
             }

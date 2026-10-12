@@ -58,6 +58,16 @@ namespace SmartStudyPlanner.Application.Services
             await _userRepository.SaveChangesAsync();
             return user;
         }
+        public async System.Threading.Tasks.Task Delete(int id)
+        {
+            var user = _userRepository.GetById(id);
+            if (user == null)
+            {
+                throw new ArgumentException("User not found.", nameof(id));
+            }
+            _userRepository.Delete(user);
+            await _userRepository.SaveChangesAsync();
+        }
         // check password hash for a user by BCrypt.Net
         public bool CheckPassword(User user, string password)
         {

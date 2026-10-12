@@ -9,5 +9,6 @@ namespace SmartStudyPlanner.Application.Interfaces
         Task<User> Add(User user);
         Task<User> Update(User user);
         bool CheckPassword(User user, string password);
+        System.Threading.Tasks.Task Delete(int id);
     }
 }

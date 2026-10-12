@@ -23,7 +23,9 @@
     <script>
         (function () {
             try {
-                if (localStorage.getItem('ssp-theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+                var m = document.cookie.match(/(?:^|; )ssp-theme=(light|dark)/);
+                var t = m ? m[1] : localStorage.getItem('ssp-theme');
+                if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
             } catch (e) { }
         })();
     </script>

@@ -67,6 +67,7 @@ namespace SmartStudyPlanner.Web
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseRouting();
 
             app.UseAuthentication();

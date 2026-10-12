@@ -227,6 +227,12 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("EmailNotifications")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ExamAlerts")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -242,6 +248,19 @@ namespace SmartStudyPlanner.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilePictureUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("ProfilePublic")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ShowEmail")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("StudyReminders")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Theme")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

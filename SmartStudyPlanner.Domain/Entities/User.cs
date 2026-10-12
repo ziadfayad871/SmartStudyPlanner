@@ -23,6 +23,18 @@ namespace SmartStudyPlanner.Domain.Entities
 
         public string? ProfilePictureContentType { get; set; }
 
+        public bool EmailNotifications { get; set; } = true;
+
+        public bool StudyReminders { get; set; } = true;
+
+        public bool ExamAlerts { get; set; } = true;
+
+        public string Theme { get; set; } = "light";
+
+        public bool ProfilePublic { get; set; } = true;
+
+        public bool ShowEmail { get; set; } = false;
+
         public ICollection<StudyPlan> StudyPlans { get; set; } = new List<StudyPlan>();
         public ICollection<StudySession> StudySessions { get; set; } = new List<StudySession>();
         public ICollection<Subject> Subjects { get; set; } = new List<Subject>();
