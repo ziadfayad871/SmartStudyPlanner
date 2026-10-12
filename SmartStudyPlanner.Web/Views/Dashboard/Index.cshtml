@@ -1,0 +1,102 @@
+@using SmartStudyPlanner.Domain.Enums
+@model SmartStudyPlanner.Application.DTOs.DashboardDto
+
+@{
+    ViewData["Title"] = "Dashboard";
+    var firstName = (Model.UserName ?? "").Split(' ').FirstOrDefault() ?? "";
+    var pct = Model.TodayProgressPercent;
+    const double C = 2 * Math.PI * 54;
+    var offset = C * (1 - pct / 100.0);
+    string StudiedText(int mins) => mins >= 60 ? $"{mins / 60}h {mins % 60:D2}m" : $"{mins}m";
+    string PriorityClass(int d) => d >= 70 ? "priority-high" : d >= 40 ? "priority-medium" : "priority-low";
+    string PriorityText(int d) => d >= 70 ? "High" : d >= 40 ? "Medium" : "Low";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">@ViewBag.Greeting, @firstName 👋</h1>
+        <p class="page-subtitle">Your future self will thank you for what you do today.</p>
+    </div>
+    <div style="color:var(--text-muted); font-size:13px;">
+        <i class="far fa-calendar-alt"></i> @Model.TodayDate.ToString("dddd, dd MMMM yyyy")
+    </div>
+</div>
+
+<div class="dash-chips">
+    <div class="dash-chip"><i class="fas fa-book"></i><div><strong>@Model.SubjectsCount</strong><span>Subjects</span></div></div>
+    <div class="dash-chip"><i class="fas fa-clock"></i><div><strong>@Model.TodaySessionsCount</strong><span>Study Sessions Today</span></div></div>
+    <div class="dash-chip"><i class="fas fa-hourglass-half"></i><div><strong>@Model.DaysUntilNextExam</strong><span>Days Until Next Exam</span></div></div>
+</div>
+
+<div class="dash-grid">
+    <div class="card dash-progress-card">
+        <h2 class="dash-card-title">Today's Study Progress</h2>
+        <div class="dash-progress-body">
+            <div class="ring-wrap">
+                <svg viewBox="0 0 120 120" class="ring">
+                    <circle cx="60" cy="60" r="54" class="ring-track" />
+                    <circle cx="60" cy="60" r="54" class="ring-fill"
+                            stroke-dasharray="@C.ToString("F1")"
+                            stroke-dashoffset="@offset.ToString("F1")" />
+                </svg>
+                <div class="ring-label"><strong>@pct.ToString("F0")%</strong><span>Overall</span></div>
+            </div>
+            <div class="dash-stats">
+                <div class="dash-stat"><i class="fas fa-check-circle"></i><div><strong>@StudiedText(Model.StudiedMinutesToday)</strong><span>Studied Today</span></div></div>
+                <div class="dash-stat"><i class="far fa-clock"></i><div><strong>@StudiedText(Model.RemainingMinutesToday)</strong><span>Remaining</span></div></div>
+                <div class="dash-stat"><i class="fas fa-tasks"></i><div><strong>@Model.CompletedTasksCount</strong><span>Tasks Completed</span></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 class="dash-card-title">Upcoming Exams</h2>
+        @if (Model.UpcomingExams.Any())
+        {
+            <div class="exam-list">
+                @foreach (var e in Model.UpcomingExams)
+                {
+                    <div class="exam-item">
+                        <div class="exam-info">
+                            <strong>@e.SubjectName</strong>
+                            <span>@e.DaysLeft <span>days left</span></span>
+                        </div>
+                        <span class="badge-difficulty @PriorityClass(e.Difficulty)">@PriorityText(e.Difficulty) Priority</span>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="dash-empty">No upcoming exams. Enjoy the calm.</p>
+        }
+    </div>
+
+    <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <h2 class="dash-card-title" style="margin:0;">Today's Plan</h2>
+            <a asp-controller="Subjects" asp-action="Create" class="btn-primary" style="padding:7px 14px; font-size:12.5px;">
+                <i class="fas fa-plus"></i> New Subject
+            </a>
+        </div>
+        @if (Model.TodayPlans.Any())
+        {
+            <div class="plan-timeline">
+                @foreach (var p in Model.TodayPlans)
+                {
+                    var cls = p.Status == SessionStatus.Completed ? "status-completed"
+                        : p.Status == SessionStatus.Cancelled ? "status-pending" : "status-inprogress";
+                    <div class="plan-item">
+                        <div class="plan-time">@p.StartTime.ToString("hh:mm tt") - @p.EndTime.ToString("hh:mm tt")</div>
+                        <div class="plan-subject">@p.SubjectName</div>
+                        <span class="badge-difficulty @cls">@p.Status</span>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="dash-empty">Nothing scheduled today. <a asp-controller="StudySessions" asp-action="Create" style="color:var(--primary); font-weight:600;">Add a session</a></p>
+        }
+    </div>
+</div>

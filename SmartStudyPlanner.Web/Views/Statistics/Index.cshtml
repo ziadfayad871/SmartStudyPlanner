@@ -1,0 +1,122 @@
+@model SmartStudyPlanner.Application.DTOs.StatisticsDto
+
+@{
+    ViewData["Title"] = "Statistics";
+    string Hm(int mins) => mins >= 60 ? $"{mins / 60}h {mins % 60:D2}m" : $"{mins}m";
+    var days = Model.StudyMinutesByDay;
+    var maxDay = Math.Max(days.Any() ? days.Max(d => d.StudyMinutesFor7Days) : 0, 1);
+    var pts = days.Select((d, i) => new
+    {
+        X = 40 + i * 85.0,
+        Y = 170 - (d.StudyMinutesFor7Days / (double)maxDay) * 140
+    }).ToList();
+    var line = string.Join(" ", pts.Select(p => $"{p.X:F0},{p.Y:F0}"));
+    var area = $"40,170 {line} {(40 + (days.Count - 1) * 85):F0},170";
+    var totalSub = Math.Max(Model.StudyMinutesBySubject.Sum(s => s.StudyMinutes), 1);
+    const double DC = 2 * Math.PI * 54;
+    var palette = new[] { "#f97316", "#3b82f6", "#8b5cf6", "#10b981", "#ef4444", "#eab308", "#06b6d4" };
+    double acc = 0;
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Statistics</h1>
+        <p class="page-subtitle">Track your progress and see your improvement over time.</p>
+    </div>
+    <div style="color:var(--text-muted); font-size:13px;">
+        <i class="far fa-calendar-alt"></i> Last 7 days
+    </div>
+</div>
+
+<div class="dash-chips stat-chips">
+    <div class="dash-chip"><i class="fas fa-fire"></i><div><strong>@Hm(Model.TotalStudyMinutes)</strong><span>Total Study Time</span></div></div>
+    <div class="dash-chip"><i class="fas fa-check-double"></i><div><strong>@Model.SessionsCompleted</strong><span>Sessions Completed</span></div></div>
+    <div class="dash-chip"><i class="fas fa-tasks"></i><div><strong>@Model.TasksCompleted</strong><span>Tasks Completed</span></div></div>
+    <div class="dash-chip"><i class="fas fa-chart-line"></i><div><strong>@Model.AverageProgress.ToString("F0")%</strong><span>Average Progress</span></div></div>
+</div>
+
+<div class="dash-grid stats-grid">
+    <div class="card stats-chart-card">
+        <h2 class="dash-card-title">Study Time</h2>
+        @if (days.Any() && days.Max(d => d.StudyMinutesFor7Days) > 0)
+        {
+            <svg viewBox="0 0 600 200" class="line-chart" role="img" aria-label="Study minutes per day">
+                <polygon points="@area" class="chart-area" />
+                <polyline points="@line" class="chart-line" />
+                @for (int i = 0; i < pts.Count; i++)
+                {
+                    <circle cx="@pts[i].X.ToString("F0")" cy="@pts[i].Y.ToString("F0")" r="4.5" class="chart-dot" />
+                    @Html.Raw($"<text x=\"{pts[i].X:F0}\" y=\"192\" text-anchor=\"middle\" class=\"chart-label\">{days[i].Date:ddd}</text>")
+                }
+            </svg>
+        }
+        else
+        {
+            <p class="dash-empty">No study time recorded yet.</p>
+        }
+    </div>
+
+    <div class="card">
+        <h2 class="dash-card-title">Subject Progress</h2>
+        @if (Model.SubjectProgress.Any())
+        {
+            <div class="subjprog-list">
+                @foreach (var s in Model.SubjectProgress)
+                {
+                    <div class="subjprog-item">
+                        <div class="subjprog-head"><strong>@s.SubjectName</strong><span>@s.ProgressPercentage.ToString("F0")%</span></div>
+                        <div class="progress-track"><div class="progress-fill" style="width:@Math.Min(s.ProgressPercentage, 100).ToString("F0")%; background:@s.Color;"></div></div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="dash-empty">No subjects yet.</p>
+        }
+    </div>
+
+    <div class="card">
+        <h2 class="dash-card-title">Study Time by Subject</h2>
+        @if (Model.StudyMinutesBySubject.Any())
+        {
+            <div class="donut-wrap">
+                <svg viewBox="0 0 120 120" class="donut-svg">
+                    @{
+                        var idx = 0;
+                    }
+                    @foreach (var s in Model.StudyMinutesBySubject)
+                    {
+                        var frac = s.StudyMinutes / (double)totalSub;
+                        var len = frac * DC;
+                        var off = -acc * DC;
+                        var color = palette[idx % palette.Length];
+                        acc += frac;
+                        idx++;
+                        <circle cx="60" cy="60" r="54" fill="none" stroke="@color" stroke-width="13"
+                                stroke-dasharray="@len.ToString("F1") @DC.ToString("F1")"
+                                stroke-dashoffset="@off.ToString("F1")"
+                                transform="rotate(-90 60 60)" stroke-linecap="butt" />
+                    }
+                </svg>
+                <div class="ring-label"><strong>@Hm(Model.TotalStudyMinutes)</strong><span>Total Time</span></div>
+            </div>
+            <div class="donut-legend">
+                @{
+                    var idx2 = 0;
+                }
+                @foreach (var s in Model.StudyMinutesBySubject)
+                {
+                    var color = palette[idx2 % palette.Length];
+                    var share = s.StudyMinutes * 100.0 / totalSub;
+                    idx2++;
+                    <div class="legend-item"><span class="legend-dot" style="background:@color;"></span>@s.SubjectName<span class="legend-pct">@share.ToString("F0")%</span></div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="dash-empty">No study time recorded yet.</p>
+        }
+    </div>
+</div>

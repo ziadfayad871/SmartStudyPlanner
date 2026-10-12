@@ -1,0 +1,118 @@
+@model SmartStudyPlanner.Web.ViewModels.CalendarViewModel
+
+@{
+    ViewData["Title"] = "Calendar";
+    var monthDate = new DateTime(Model.Year, Model.Month, 1);
+    var dayNames = new[] { "Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri" };
+    string Subj(int id) => Model.SubjectNames.TryGetValue(id, out var n) ? n : "—";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Calendar</h1>
+        <p class="page-subtitle">View your study sessions and important dates.</p>
+    </div>
+</div>
+
+<div class="cal-layout">
+    <div class="card cal-main">
+        <div class="cal-header">
+            <a class="icon-btn" asp-action="Index" asp-route-year="@ViewBag.PrevYear" asp-route-month="@ViewBag.PrevMonth" title="Previous month">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+            <h2>@monthDate.ToString("MMMM yyyy")</h2>
+            <a class="icon-btn" asp-action="Index" asp-route-year="@ViewBag.NextYear" asp-route-month="@ViewBag.NextMonth" title="Next month">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </div>
+
+        <div class="cal-grid cal-days">
+            @foreach (var d in dayNames)
+            {
+                <div class="cal-dayname">@d</div>
+            }
+        </div>
+        <div class="cal-grid">
+            @foreach (var week in Model.Weeks)
+            {
+                @foreach (var cd in week)
+                {
+                    <a asp-action="Index" asp-route-year="@cd.Date.Year" asp-route-month="@cd.Date.Month" asp-route-day="@cd.Date.Day"
+                       class="cal-cell @(cd.InMonth ? "" : "cal-out") @(cd.IsToday ? "cal-today" : "") @(cd.IsSelected ? "cal-selected" : "")">
+                        <span class="cal-num">@cd.Date.Day</span>
+                        @if (cd.SessionCount > 0)
+                        {
+                            <span class="cal-dots">
+                                @for (int i = 0; i < Math.Min(cd.SessionCount, 3); i++)
+                                {
+                                    <span class="cal-dot"></span>
+                                }
+                                @if (cd.SessionCount > 3)
+                                {
+                                    <span class="cal-more">+@(cd.SessionCount - 3)</span>
+                                }
+                            </span>
+                        }
+                    </a>
+                }
+            }
+        </div>
+
+        <div class="cal-selected-day">
+            <h3>@Model.SelectedDate.ToString("dddd, dd MMMM yyyy")</h3>
+            @if (Model.SelectedSessions.Any())
+            {
+                <div class="plan-timeline">
+                    @foreach (var s in Model.SelectedSessions)
+                    {
+                        <div class="plan-item">
+                            <div class="plan-time">@s.StartTime.ToString("hh:mm tt") - @s.EndTime.ToString("hh:mm tt")</div>
+                            <div class="plan-subject">@Subj(s.SubjectId)</div>
+                            <span class="badge-difficulty status-pending">@s.Status</span>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="dash-empty">No sessions this day.</p>
+            }
+        </div>
+    </div>
+
+    <div class="cal-side">
+        <div class="card">
+            <h2 class="dash-card-title">Upcoming Exams</h2>
+            @if (Model.UpcomingExams.Any())
+            {
+                <div class="exam-list">
+                    @foreach (var e in Model.UpcomingExams)
+                    {
+                        <div class="exam-item">
+                            <div class="exam-info">
+                                <strong>@e.SubjectName</strong>
+                                <span>@e.DaysLeft <span>days left</span> &middot; @e.ExamDate.ToString("MMM d, yyyy")</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="dash-empty">No upcoming exams.</p>
+            }
+        </div>
+
+        <div class="card">
+            <h2 class="dash-card-title">Quick Add</h2>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <a asp-controller="StudySessions" asp-action="Create" class="btn-primary" style="justify-content:center;">
+                    <i class="fas fa-clock"></i> Study Session
+                </a>
+                <a asp-controller="Tasks" asp-action="Create" class="btn-outline-soft" style="justify-content:center;">
+                    <i class="fas fa-tasks"></i> Task
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

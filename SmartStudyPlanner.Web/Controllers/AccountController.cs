@@ -22,7 +22,7 @@ namespace SmartStudyPlanner.Web.Controllers
         public IActionResult Login(string? returnUrl = null)
         {
             if (User.Identity?.IsAuthenticated == true)
-                return RedirectToAction("Index", "Subjects");
+                return RedirectToAction("Index", "Dashboard");
 
             ViewBag.ReturnUrl = returnUrl;
             return View(new LoginViewModel());
@@ -63,14 +63,14 @@ namespace SmartStudyPlanner.Web.Controllers
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
 
-            return RedirectToAction("Index", "Subjects");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         [HttpGet]
         public IActionResult Register()
         {
             if (User.Identity?.IsAuthenticated == true)
-                return RedirectToAction("Index", "Subjects");
+                return RedirectToAction("Index", "Dashboard");
 
             return View(new RegisterViewModel());
         }
@@ -112,7 +112,7 @@ namespace SmartStudyPlanner.Web.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
                 new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30) });
 
-            return RedirectToAction("Index", "Subjects");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         [HttpPost]

@@ -35,7 +35,8 @@
             </div>
 
             <nav class="sidebar-nav">
-                <a class="nav-link disabled-link" title="Coming soon">
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")"
+                   asp-controller="Dashboard" asp-action="Index">
                     <i class="fas fa-th-large"></i> Dashboard
                 </a>
                 <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Subjects" ? "active" : "")"
@@ -54,14 +55,16 @@
                    asp-controller="Availabilities" asp-action="Index">
                     <i class="fas fa-calendar-day"></i> Availability
                 </a>
-                <a class="nav-link disabled-link" title="Coming soon">
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Calendar" ? "active" : "")"
+                   asp-controller="Calendar" asp-action="Index">
                     <i class="fas fa-calendar"></i> Calendar
                 </a>
                 <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Tasks" ? "active" : "")"
                    asp-controller="Tasks" asp-action="Index">
                     <i class="fas fa-tasks"></i> Tasks
                 </a>
-                <a class="nav-link disabled-link" title="Coming soon">
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Statistics" ? "active" : "")"
+                   asp-controller="Statistics" asp-action="Index">
                     <i class="fas fa-chart-bar"></i> Statistics
                 </a>
                 <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Settings" ? "active" : "")"
