@@ -11,11 +11,16 @@ namespace SmartStudyPlanner.Web.Controllers
     {
         private readonly IStudyPlanService _planService;
         private readonly IStudySessionService _sessionService;
+        private readonly IStudyPlanningService _planningService;
 
-        public StudyPlansController(IStudyPlanService planService, IStudySessionService sessionService)
+        public StudyPlansController(
+            IStudyPlanService planService,
+            IStudySessionService sessionService,
+            IStudyPlanningService planningService)
         {
             _planService = planService;
             _sessionService = sessionService;
+            _planningService = planningService;
         }
 
         private int GetCurrentUserId()
@@ -77,6 +82,28 @@ namespace SmartStudyPlanner.Web.Controllers
 
             _planService.AddStudyPlan(plan);
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Generate(string planName, DateTime startDate, DateTime endDate)
+        {
+            if (string.IsNullOrWhiteSpace(planName))
+            {
+                TempData["Error"] = "Please enter a plan name.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            try
+            {
+                var plan = _planningService.GeneratePlan(GetCurrentUserId(), planName, startDate, endDate);
+                return RedirectToAction(nameof(Details), new { id = plan.Id });
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpGet]

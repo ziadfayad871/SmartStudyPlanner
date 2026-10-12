@@ -11,10 +11,15 @@ namespace SmartStudyPlanner.Application.Services
     {
         private readonly IStudyPlanRepository _studyPlanRepository;
         private readonly IStudySessionRepository _studySessionRepository;
-        public StudyPlanService(IStudyPlanRepository studyPlanRepository, IStudySessionRepository studySessionRepository)
+        private readonly IStudyPlanningService _planningService;
+        public StudyPlanService(
+            IStudyPlanRepository studyPlanRepository,
+            IStudySessionRepository studySessionRepository,
+            IStudyPlanningService planningService)
         {
             _studyPlanRepository = studyPlanRepository;
             _studySessionRepository = studySessionRepository;
+            _planningService = planningService;
         }
         public void AddStudyPlan(StudyPlan studyPlan)
         {
@@ -72,6 +77,12 @@ namespace SmartStudyPlanner.Application.Services
             studySession.StudyPlanId = null;
             _studySessionRepository.Update(studySession);
             _studySessionRepository.SaveChanges();
+        }
+
+        public Task<StudyPlan> GenerateStudyPlanAsync(int userId, string name, DateTime startDate, DateTime endDate)
+        {
+            var plan = _planningService.GeneratePlan(userId, name, startDate, endDate);
+            return System.Threading.Tasks.Task.FromResult(plan);
         }
     }
 }

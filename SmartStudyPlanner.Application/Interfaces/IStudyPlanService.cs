@@ -13,5 +13,7 @@ namespace SmartStudyPlanner.Application.Interfaces
         void AddStudyPlan(StudyPlan studyPlan);
         void DeleteStudyPlan(StudyPlan studyPlan);
         void RemoveSessionFromStudyPlan(int sessionId);
+        // generate plan : 
+        Task<StudyPlan> GenerateStudyPlanAsync(int userId,string name, DateTime startDate, DateTime endDate);
     }
 }

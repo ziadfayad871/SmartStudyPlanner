@@ -11,6 +11,8 @@ namespace SmartStudyPlanner.Application.Interfaces
         IEnumerable<Subject> GetSubjectsForPlanning(
             IEnumerable<Subject> subjects);
         IEnumerable<Subject> GetAvailableSubjects (IEnumerable<Subject> subjects, int availableMinutes);
+
+        StudyPlan GeneratePlan(int userId, string planName, DateTime startDate, DateTime endDate);
     }
     
 }
