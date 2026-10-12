@@ -26,6 +26,9 @@
 <body>
     <div class="app-layout">
         <aside class="sidebar">
+            <button type="button" id="sidebarClose" class="sidebar-close" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
             <div class="sidebar-brand">
                 <div class="brand-icon"><i class="fas fa-book-open"></i></div>
                 <div class="brand-text">
@@ -102,6 +105,7 @@
                 }
             </div>
         </aside>
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
         <main class="main-content">
             <header class="topbar">
@@ -175,6 +179,20 @@
                     var collapsed = layout.classList.toggle('sidebar-collapsed');
                     try { localStorage.setItem('ssp-sidebar', collapsed ? 'collapsed' : ''); } catch (e) { }
                 }
+            });
+
+            function closeSidebar() { layout.classList.remove('sidebar-open'); }
+            var closeBtn = document.getElementById('sidebarClose');
+            if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+            var backdrop = document.getElementById('sidebarBackdrop');
+            if (backdrop) backdrop.addEventListener('click', closeSidebar);
+            document.querySelectorAll('.sidebar-nav .nav-link').forEach(function (a) {
+                a.addEventListener('click', function () {
+                    if (window.innerWidth < 993) closeSidebar();
+                });
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeSidebar();
             });
 
             var themeBtn = document.getElementById('themeToggle');
