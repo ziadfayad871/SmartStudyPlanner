@@ -1,0 +1,222 @@
+// Arabic translations, keyed by exact English text. Applied only when <html lang="ar">.
+(function () {
+    if (document.documentElement.lang !== 'ar') return;
+
+    var dict = {
+        // Shell
+        'Smart Study': 'دراسة ذكية',
+        'Planner': 'مخطط',
+        'Dashboard': 'لوحة التحكم',
+        'My Subjects': 'موادي الدراسية',
+        'Study Plan': 'خطة الدراسة',
+        'Sessions': 'الجلسات',
+        'Availability': 'المواعيد المتاحة',
+        'Calendar': 'التقويم',
+        'Tasks': 'المهام',
+        'Statistics': 'الإحصائيات',
+        'Settings': 'الإعدادات',
+        'Profile Settings': 'إعدادات الحساب',
+        'Logout': 'تسجيل الخروج',
+        'Small steps,': 'خطوات صغيرة،',
+        'every day': 'كل يوم',
+        'lead to big results.': 'تصنع نتائج كبيرة.',
+        // Auth
+        'Smart Study Planner': 'مخطط المذاكرة الذكي',
+        'Welcome Back': 'مرحبًا بعودتك',
+        'Sign in to continue your learning journey.': 'سجّل الدخول لمواصلة رحلة تعلّمك.',
+        'Create Your Account': 'أنشئ حسابك',
+        'Start planning your studies today.': 'ابدأ تنظيم مذاكرتك اليوم.',
+        'Email': 'البريد الإلكتروني',
+        'Password': 'كلمة المرور',
+        'Confirm Password': 'تأكيد كلمة المرور',
+        'Full Name': 'الاسم بالكامل',
+        'Academic Year': 'السنة الدراسية',
+        'Select your year': 'اختر سنتك الدراسية',
+        'Remember me': 'تذكرني',
+        'Login': 'دخول',
+        'Register': 'تسجيل',
+        "Don't have an account?": 'ليس لديك حساب؟',
+        'Already have an account?': 'لديك حساب بالفعل؟',
+        'you@example.com': 'you@example.com',
+        'Enter your password': 'أدخل كلمة المرور',
+        'At least 6 characters': '6 أحرف على الأقل',
+        'Re-enter your password': 'أعد إدخال كلمة المرور',
+        // Subjects
+        'Manage your subjects, track progress and add new ones.': 'نظّم موادك وتابع تقدمك وأضف مواد جديدة.',
+        'Search subjects...': 'ابحث في المواد...',
+        'Add Subject': 'إضافة مادة',
+        'Subject': 'المادة',
+        'Difficulty': 'الصعوبة',
+        'Progress': 'التقدم',
+        'Exam Date': 'تاريخ الامتحان',
+        'Actions': 'إجراءات',
+        'Hard': 'صعب',
+        'Medium': 'متوسط',
+        'Easy': 'سهل',
+        'Add New Subject': 'إضافة مادة جديدة',
+        'Back to Subjects': 'رجوع للمواد',
+        'Subject Name': 'اسم المادة',
+        'e.g. C#': 'مثال: C#',
+        'Description': 'الوصف',
+        'Brief description about the subject...': 'وصف مختصر عن المادة...',
+        'Current Progress': 'التقدم الحالي',
+        'Select date': 'اختر التاريخ',
+        'Color': 'اللون',
+        'Cancel': 'إلغاء',
+        'Save Subject': 'حفظ المادة',
+        'Save Changes': 'حفظ التغييرات',
+        'View Full Plan': 'عرض الخطة كاملة',
+        // Tasks
+        'Manage your tasks and never miss anything.': 'نظّم مهامك ولا يفوتك شيء.',
+        'Add Task': 'إضافة مهمة',
+        'All': 'الكل',
+        'Today': 'اليوم',
+        'Completed': 'المنجزة',
+        'Task': 'المهمة',
+        'Priority': 'الأولوية',
+        'Due Date': 'تاريخ الاستحقاق',
+        'Status': 'الحالة',
+        'High': 'عالية',
+        'Low': 'منخفضة',
+        'Pending': 'معلقة',
+        'In Progress': 'جارية',
+        'Add New Task': 'إضافة مهمة جديدة',
+        'Task Title': 'عنوان المهمة',
+        'e.g. Finish C# LINQ exercises': 'مثال: إنهاء تمارين C#',
+        'Select a subject': 'اختر المادة',
+        'Estimated Minutes': 'الدقائق المتوقعة',
+        'e.g. 60': 'مثال: 60',
+        'Save Task': 'حفظ المهمة',
+        'Back to Tasks': 'رجوع للمهام',
+        'Edit Task': 'تعديل المهمة',
+        'Delete Task?': 'مسح المهمة؟',
+        // Sessions
+        'Study Sessions': 'جلسات المذاكرة',
+        'Your scheduled study time, all in one place.': 'مواعيد مذاكرتك المجدولة في مكان واحد.',
+        'Add Session': 'إضافة جلسة',
+        'My Availability': 'مواعيد فراغي',
+        'Upcoming': 'القادمة',
+        'Date': 'التاريخ',
+        'Time': 'الوقت',
+        'Duration': 'المدة',
+        'Scheduled': 'مجدولة',
+        'Missed': 'فائتة',
+        'Cancelled': 'ملغاة',
+        'No sessions found.': 'لا توجد جلسات.',
+        'Add your first session': 'أضف أول جلسة',
+        'Add Study Session': 'إضافة جلسة مذاكرة',
+        "You don't have any subjects yet. Add a subject first.": 'لا توجد مواد بعد. أضف مادة أولًا.',
+        'Start Time': 'وقت البداية',
+        'End Time': 'وقت النهاية',
+        'Study Plan (optional)': 'خطة الدراسة (اختياري)',
+        'No plan (free session)': 'بدون خطة (جلسة حرة)',
+        'Save Session': 'حفظ الجلسة',
+        'Edit Study Session': 'تعديل جلسة المذاكرة',
+        'Back to Sessions': 'رجوع للجلسات',
+        'Delete Session?': 'مسح الجلسة؟',
+        'This action cannot be undone.': 'لا يمكن التراجع عن هذا الإجراء.',
+        'Delete': 'مسح',
+        // Availability
+        "Tell us when you're free to study each week.": 'عرّفنا بأوقات فراغك للمذاكرة كل أسبوع.',
+        'Add Availability': 'إضافة موعد',
+        'Day': 'اليوم',
+        'Available From': 'متاح من',
+        'Available To': 'متاح إلى',
+        'Save': 'حفظ',
+        'No availability set.': 'لم تحدد مواعيد بعد.',
+        'Add your free hours': 'أضف أوقات فراغك',
+        'Edit Availability': 'تعديل الموعد',
+        'Delete Availability?': 'مسح الموعد؟',
+        'Back to Availability': 'رجوع للمواعيد',
+        'Saturday': 'السبت',
+        'Sunday': 'الأحد',
+        'Monday': 'الاثنين',
+        'Tuesday': 'الثلاثاء',
+        'Wednesday': 'الأربعاء',
+        'Thursday': 'الخميس',
+        'Friday': 'الجمعة',
+        // Study plans
+        'Study Plans': 'خطط الدراسة',
+        'Group your sessions into focused plans.': 'جمّع جلساتك في خطط مركّزة.',
+        'New Plan': 'خطة جديدة',
+        'Generate Plan Automatically': 'توليد خطة تلقائيًا',
+        'Sessions are created from your weekly availability and exam priorities.': 'تُنشأ الجلسات من مواعيد فراغك الأسبوعية وأولويات الامتحانات.',
+        'Plan Name': 'اسم الخطة',
+        'e.g. Midterm Revision Plan': 'مثال: خطة مراجعة الميدتيرم',
+        'From': 'من',
+        'To': 'إلى',
+        'Generate': 'توليد',
+        'Plan': 'الخطة',
+        'Period': 'الفترة',
+        'Created': 'أُنشئت',
+        'No plans yet.': 'لا توجد خطط بعد.',
+        'Create your first plan': 'أنشئ أول خطة',
+        'Delete Plan': 'مسح الخطة',
+        'Back to Plans': 'رجوع للخطط',
+        'Sessions in this plan': 'جلسات هذه الخطة',
+        'No sessions in this plan yet. Add one below.': 'لا توجد جلسات في هذه الخطة بعد. أضف واحدة بالأسفل.',
+        'Add a free session to this plan': 'أضف جلسة حرة لهذه الخطة',
+        'Session': 'الجلسة',
+        'Add': 'إضافة',
+        'Create Study Plan': 'إنشاء خطة دراسية',
+        'What is this plan about?': 'عن ماذا تتحدث هذه الخطة؟',
+        'Start Date': 'تاريخ البداية',
+        'End Date': 'تاريخ النهاية',
+        'Create Plan': 'إنشاء الخطة',
+        'Delete Plan?': 'مسح الخطة؟',
+        'session(s) will become free sessions (not deleted).': 'ستصبح الجلسات حرة (لن تُمسح).',
+        // Settings
+        'Manage your account and preferences.': 'أدر حسابك وتفضيلاتك.',
+        'Profile': 'الملف الشخصي',
+        'Account': 'الحساب',
+        'Notifications': 'الإشعارات',
+        'Appearance': 'المظهر',
+        'Privacy': 'الخصوصية',
+        'Profile Information': 'البيانات الشخصية',
+        'Update your personal information.': 'حدّث بياناتك الشخصية.',
+        'Change Photo': 'تغيير الصورة',
+        'Your full name': 'اسمك بالكامل',
+        '1st Year': 'السنة الأولى',
+        '2nd Year': 'السنة الثانية',
+        '3rd Year': 'السنة الثالثة',
+        '4th Year': 'السنة الرابعة',
+        'Graduate': 'خريج',
+        'Profile updated successfully.': 'تم تحديث الحساب بنجاح.',
+        'Name and email are required.': 'الاسم والبريد مطلوبان.',
+        'This email is already in use.': 'هذا البريد مستخدم بالفعل.',
+        'Please upload an image file.': 'من فضلك ارفع ملف صورة.',
+        'Image must be smaller than 2 MB.': 'يجب أن تكون الصورة أقل من 2 ميجا.'
+    };
+
+    function swap(text) {
+        if (!text) return null;
+        var key = text.trim();
+        if (!key || !Object.prototype.hasOwnProperty.call(dict, key)) return null;
+        return text.replace(key, dict[key]);
+    }
+
+    var skipTags = { SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, CODE: 1, PRE: 1 };
+    var walker = document.createTreeWalker(
+        document.body,
+        NodeFilter.SHOW_TEXT,
+        {
+            acceptNode: function (node) {
+                if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+                var p = node.parentElement;
+                if (p && skipTags[p.tagName]) return NodeFilter.FILTER_REJECT;
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        }
+    );
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(function (n) {
+        var r = swap(n.nodeValue);
+        if (r) n.nodeValue = r;
+    });
+
+    document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(function (el) {
+        var r = swap(el.getAttribute('placeholder'));
+        if (r) el.setAttribute('placeholder', r);
+    });
+})();

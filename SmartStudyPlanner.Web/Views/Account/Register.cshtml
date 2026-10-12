@@ -6,14 +6,18 @@
 }
 
 <!DOCTYPE html>
-<html lang="en">
+@{
+    var _lang = Context.Request.Cookies["ssp-lang"];
+    var _isAr = _lang == "ar";
+}
+<html lang="@(_isAr ? "ar" : "en")" dir="@(_isAr ? "rtl" : "ltr")">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register - Smart Study Planner</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <script>
@@ -25,6 +29,11 @@
     </script>
 </head>
 <body class="auth-page">
+
+    <button type="button" id="langToggle" class="icon-btn lang-btn" title="@(_isAr ? "English" : "عربي")"
+            style="position:fixed; top:16px; inset-inline-end:16px; z-index:10;">
+        @(_isAr ? "EN" : "عربي")
+    </button>
 
     <div class="auth-card">
         <div class="auth-brand">
@@ -86,5 +95,16 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/i18n.js" asp-append-version="true"></script>
+    <script>
+        (function () {
+            var langBtn = document.getElementById('langToggle');
+            if (langBtn) langBtn.addEventListener('click', function () {
+                var isAr = document.documentElement.lang === 'ar';
+                try { document.cookie = 'ssp-lang=' + (isAr ? 'en' : 'ar') + ';path=/;max-age=31536000'; } catch (e) { }
+                location.reload();
+            });
+        })();
+    </script>
 </body>
 </html>
