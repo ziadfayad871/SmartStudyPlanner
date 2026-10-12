@@ -45,6 +45,7 @@ namespace SmartStudyPlanner.Web
             builder.Services.AddScoped<IStudyPlanRepository, StudyPlanRepository>();
             builder.Services.AddScoped<IStudyPlanService, StudyPlanService>();
             builder.Services.AddScoped<IDashboardService, DashboardService>();
+            builder.Services.AddScoped<IStatisticsService, StatisticsService>();
 
 
             var app = builder.Build();
